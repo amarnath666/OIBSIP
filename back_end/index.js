@@ -9,6 +9,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import exp from "constants";
+import authRoutes from "./routes/auth.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -16,9 +17,10 @@ const __dirname = path.dirname(__filename);
 dotenv.config(); 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 /* ROUTES */
-import authRoutes from "./routes/auth.js";
+app.use("/auth", authRoutes);
 
 /* MONGOOSE SETUP */
 mongoose.connect(process.env.MONGODB_URL);
@@ -30,11 +32,7 @@ db.once("open", () => {
     console.log("Connected to MongoDB");
 });
 
-app.get("/", (req, res) => {
-    res.send("hello");
-});
-
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`server is listening on port ${PORT}`)
 });
