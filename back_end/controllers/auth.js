@@ -35,7 +35,7 @@ export const register = async(req, res) => {
         await newUser.save();
 
         //sent a verfication email
-        const verificationLink =  `http://localhost:3001/verify?token=${verificationToken}`;
+        const verificationLink =  `http://localhost:3001/auth/verify?token=${verificationToken}`;
         const emailSubject = "Verify your email";
         const emailText =  `Click the following link to verify you email: ${verificationLink}`;
         await sendEmail(email, emailSubject, emailText);
@@ -62,7 +62,7 @@ export const verifyToken = async (req, res) => {
         user.verificationToken = undefined; 
         await user.save();
 
-        return res.status(200).json()({ message: "Email verification successful"});
+        return res.status(200).json({ message: "Email verification successful"});
     } catch(error) {
         return res.status(500).json({ error: "Internal Server Error" });
     };

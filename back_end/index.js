@@ -32,6 +32,10 @@ db.once("open", () => {
     console.log("Connected to MongoDB");
 });
 
+app.get("/", (req, res) => {
+    res.send("amarnath");
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`server is listening on port ${PORT}`)
