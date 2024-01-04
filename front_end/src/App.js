@@ -1,9 +1,8 @@
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import LoginPage from "scenes/loginPage";
 import { useSelector } from "react-redux";
-import { createTheme } from "@mui/material/styles";
-import { ThemeProvider } from "@mui/material/styles";
-import { themeSettings } from "theme";
+import VerificationPage from "scenes/loginPage/VerificationPage";
+
 
 function App() {
 
@@ -12,6 +11,7 @@ function App() {
         <BrowserRouter>     
             <Routes>
               <Route path="/" element={<LoginPage />} />
+              <Route path="/verification" element={<VerificationPage />} />
             </Routes>
         </BrowserRouter>
         

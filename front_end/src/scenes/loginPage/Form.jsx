@@ -1,20 +1,17 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
   TextField,
   useMediaQuery,
   Typography,
-  useTheme,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setLogin, setVerificationSuccess, setVerificationError } from "state";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setLogin } from "state";
-import Dropzone from "react-dropzone";
-import FlexBetween from "../../components/FlexBetween";
+import VerificationPage from "./VerificationPage";
 
 const registerSchema = yup.object().shape({
   name: yup.string().required("required"),
@@ -42,7 +39,6 @@ const initialValuesLogin = {
 
 const Form = () => {
   const [pageType, setPageType] = useState("login");
-  const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -50,24 +46,38 @@ const Form = () => {
   const isRegister = pageType === "register";
 
   const register = async (values, onSubmitProps) => {
-    const savedUserResponse = await fetch("http://localhost:3001/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    const savedUser = await savedUserResponse.json();
+    try {
+      const savedUserResponse = await fetch(
+        "http://localhost:3001/auth/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        }
+      );
 
-    if (savedUser) {
-      setPageType("login");
+      if (savedUserResponse.ok) {
+        setPageType("login");
+        navigate("/verification");
+      } else {
+        // Handle registration error
+        const errorData = await savedUserResponse.json();
+        console.error("Registration error:", errorData.error);
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
     }
   };
 
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
+    const loggedInResponse = await fetch(
+      "http://localhost:3001/auth/login",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      }
+    );
     const loggedIn = await loggedInResponse.json();
     onSubmitProps.resetForm();
     if (loggedIn) {
@@ -92,15 +102,21 @@ const Form = () => {
 
     if (verificationToken) {
       try {
-        const response = await fetch (`http://localhost:3001/auth/verify/${verificationToken}`);
+        const response = await fetch(
+          `http://localhost:3001/auth/verify/${verificationToken}`
+        );
         const result = await response.json();
 
-        // if (response.ok) {
-        //   //Handle successful verification
-        //   console.log(result.message);
-        // } else {
-        //   console.error(result.error);
-        // }
+        if (response.ok) {
+          //Handle successful verification
+          dispatch(setVerificationSuccess(true));
+          console.log(result.message);
+          // Redirect to login page after successful verification
+          navigate("/login");
+        } else {
+          dispatch(setVerificationError(true));
+          console.error(result.error);
+        }
       } catch (error) {
         console.error("Error during verification:", error);
       }
@@ -109,7 +125,7 @@ const Form = () => {
 
   useEffect(() => {
     verifyUser();
-  }, []);
+  }, [navigate]);
 
   return (
     <Formik
@@ -144,9 +160,7 @@ const Form = () => {
                   onChange={handleChange}
                   value={values.name}
                   name="name"
-                  error={
-                    Boolean(touched.name) && Boolean(errors.name)
-                  }
+                  error={Boolean(touched.name) && Boolean(errors.name)}
                   helperText={touched.name && errors.name}
                   sx={{ gridColumn: "span 4" }}
                 />
@@ -156,16 +170,14 @@ const Form = () => {
                   onChange={handleChange}
                   value={values.location}
                   name="location"
-                  error={
-                    Boolean(touched.location) && Boolean(errors.location)
-                  }
+                  error={Boolean(touched.location) && Boolean(errors.location)}
                   helperText={touched.location && errors.location}
                   sx={{ gridColumn: "span 4" }}
                 />
               </>
             )}
-      
-        <TextField
+
+            <TextField
               label="Email"
               onBlur={handleBlur}
               onChange={handleChange}
@@ -186,8 +198,7 @@ const Form = () => {
               helperText={touched.password && errors.password}
               sx={{ gridColumn: "span 4" }}
             />
-        </Box>
-    
+          </Box>
 
           {/* BUTTONS */}
           <Box>
@@ -197,7 +208,7 @@ const Form = () => {
               sx={{
                 m: "2rem 0",
                 p: "1rem",
-                backgroundColor:"#14D974",
+                backgroundColor: "#14D974",
                 color: "#FFFFFF",
                 "&:hover": { backgroundColor: "#7CF5B7" },
               }}
@@ -223,6 +234,9 @@ const Form = () => {
                 : "Already have an account? Login here."}
             </Typography>
           </Box>
+
+          {/* Verification Page */}
+          {isRegister && <VerificationPage />}
         </form>
       )}
     </Formik>
