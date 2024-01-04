@@ -9,7 +9,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import exp from "constants";
-import authRoutes from "./routes/auth.js";
+import authControllers from "./controllers/auth.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(cors());
 
 /* ROUTES */
-app.use("/auth", authRoutes);
+app.use("/auth", authControllers);
 
 /* MONGOOSE SETUP */
 mongoose.connect(process.env.MONGODB_URL);
@@ -32,9 +32,9 @@ db.once("open", () => {
     console.log("Connected to MongoDB");
 });
 
-app.get("/", (req, res) => {
-    res.send("amarnath");
-});
+// app.get("/", (req, res) => {
+//     res.send("amarnath");
+// });
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

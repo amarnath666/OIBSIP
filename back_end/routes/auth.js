@@ -1,10 +1,10 @@
-import express from "express";
-import { register, verifyToken, login} from "../controllers/auth.js";
+// import express from "express";
+// import { register, login} from "../controllers/auth.js";
 
-const router = express.Router();
+// const router = express.Router();
 
-router.post("/register", register);
-router.post("/login", login);
-router.get("/verify/:token", verifyToken);
+// router.post("/register", register);
+// router.post("/login", login);
+// // router.get("/verify/:token", verifyToken);
 
-export default router;
+// export default router;
