@@ -1,17 +1,21 @@
 import jwt from "jsonwebtoken";
+
+
 export const generateLogToken = (user) => {
   return jwt.sign(
     {
       _id:user._id,
-      name:user.fullname,
+      name:user.name,
       email:user.email,
     },
     process.env.JWT_PASS || "****",
     {
-      expressIn: "10d",
+      expiresIn: "10d",
     }
   );
 };
+
+
 
 
 
