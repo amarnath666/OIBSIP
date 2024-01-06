@@ -1,246 +1,218 @@
-import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  TextField,
-  useMediaQuery,
-  Typography,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { setLogin, setVerificationSuccess, setVerificationError } from "state";
-import { Formik } from "formik";
-import * as yup from "yup";
-import VerificationPage from "./VerificationPage";
+// import React, { useEffect, useState } from "react";
+// import {
+//   Box,
+//   Button,
+//   TextField,
+//   useMediaQuery,
+//   Typography,
+// } from "@mui/material";
+// import { useNavigate } from "react-router-dom";
+// import { useDispatch, useSelector } from "react-redux";
+// import { setLogin, setVerificationSuccess, setVerificationError } from "state";
+// import { Formik } from "formik";
+// import * as yup from "yup";
 
-const registerSchema = yup.object().shape({
-  name: yup.string().required("required"),
-  email: yup.string().email("invalid email").required("required"),
-  location: yup.string().required("required"),
-  password: yup.string().required("required"),
-});
 
-const loginSchema = yup.object().shape({
-  email: yup.string().email("invalid email").required("required"),
-  password: yup.string().required("required"),
-});
+// const registerSchema = yup.object().shape({
+//   name: yup.string().required("required"),
+//   email: yup.string().email("invalid email").required("required"),
+//   location: yup.string().required("required"),
+//   password: yup.string().required("required"),
+// });
 
-const initialValuesRegister = {
-  name: "",
-  email: "",
-  location: "",
-  password: "",
-};
+// const loginSchema = yup.object().shape({
+//   email: yup.string().email("invalid email").required("required"),
+//   password: yup.string().required("required"),
+// });
 
-const initialValuesLogin = {
-  email: "",
-  password: "",
-};
+// const initialValuesRegister = {
+//   name: "",
+//   email: "",
+//   location: "",
+//   password: "",
+// };
 
-const Form = () => {
-  const [pageType, setPageType] = useState("login");
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const isNonMobile = useMediaQuery("(min-width:600px)");
-  const isLogin = pageType === "login";
-  const isRegister = pageType === "register";
+// const initialValuesLogin = {
+//   email: "",
+//   password: "",
+// };
 
-  const register = async (values, onSubmitProps) => {
-    try {
-      const savedUserResponse = await fetch(
-        "http://localhost:3001/auth/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
-        }
-      );
+// const Form = () => {
+//   const [pageType, setPageType] = useState("login");
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
+//   const isNonMobile = useMediaQuery("(min-width:600px)");
+//   const isLogin = pageType === "login";
+//   const isRegister = pageType === "register";
 
-      if (savedUserResponse.ok) {
-        setPageType("login");
-        navigate("/verification");
-      } else {
-        // Handle registration error
-        const errorData = await savedUserResponse.json();
-        console.error("Registration error:", errorData.error);
-      }
-    } catch (error) {
-      console.error("Error during registration:", error);
-    }
-  };
+//   const register = async (values, onSubmitProps) => {
+//     try {
+//       const savedUserResponse = await fetch(
+//         "http://localhost:3001/auth/register",
+//         {
+//           method: "POST",
+//           headers: { "Content-Type": "application/json" },
+//           body: JSON.stringify(values),
+//         }
+//       );
 
-  const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch(
-      "http://localhost:3001/auth/login",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      }
-    );
-    const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
-    if (loggedIn) {
-      dispatch(
-        setLogin({
-          user: loggedIn.user,
-          token: loggedIn.token,
-        })
-      );
-      navigate("/home");
-    }
-  };
+//       if (savedUserResponse.ok) {
+//         onSubmitProps.setStatus({
+//           success: true,
+//           message: "Registration successful. Please check your email for verification.",
+//         });
+//       } else {
+//         // Handle registration error
+//         const errorData = await savedUserResponse.json();
+//         console.error("Registration error:", errorData.error);
+//       }
+//     } catch (error) {
+//       console.error("Error during registration:", error);
+//     }
+//   };
 
-  const handleFormSubmit = async (values, onSubmitProps) => {
-    if (isLogin) await login(values, onSubmitProps);
-    if (isRegister) await register(values, onSubmitProps);
-  };
+//   const login = async (values, onSubmitProps) => {
+//     const loggedInResponse = await fetch(
+//       "http://localhost:3001/auth/login",
+//       {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify(values),
+//       }
+//     );
+//     const loggedIn = await loggedInResponse.json();
+//     onSubmitProps.resetForm();
+//     if (loggedIn) {
+//       dispatch(
+//         setLogin({
+//           user: loggedIn.user,
+//           token: loggedIn.token,
+//         })
+//       );
+//       navigate("/home");
+//     }
+//   };
 
-  const verifyUser = async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const verificationToken = urlParams.get("token");
+//   const handleFormSubmit = async (values, onSubmitProps) => {
+//     if (isLogin) await login(values, onSubmitProps);
+//     if (isRegister) await register(values, onSubmitProps);
+//   };
 
-    if (verificationToken) {
-      try {
-        const response = await fetch(
-          `http://localhost:3001/auth/verify/${verificationToken}`
-        );
-        const result = await response.json();
+ 
+//   return (
+//     <Formik
+//       onSubmit={handleFormSubmit}
+//       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
+//       validationSchema={isLogin ? loginSchema : registerSchema}
+//     >
+//       {({
+//         values,
+//         errors,
+//         touched,
+//         handleBlur,
+//         handleChange,
+//         handleSubmit,
+//         setFieldValue,
+//         resetForm,
+//       }) => (
+//         <form onSubmit={handleSubmit}>
+//           <Box
+//             display="grid"
+//             gap="30px"
+//             gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+//             sx={{
+//               "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+//             }}
+//           >
+//             {isRegister && (
+//               <>
+//                 <TextField
+//                   label="Name"
+//                   onBlur={handleBlur}
+//                   onChange={handleChange}
+//                   value={values.name}
+//                   name="name"
+//                   error={Boolean(touched.name) && Boolean(errors.name)}
+//                   helperText={touched.name && errors.name}
+//                   sx={{ gridColumn: "span 4" }}
+//                 />
+//                 <TextField
+//                   label="Location"
+//                   onBlur={handleBlur}
+//                   onChange={handleChange}
+//                   value={values.location}
+//                   name="location"
+//                   error={Boolean(touched.location) && Boolean(errors.location)}
+//                   helperText={touched.location && errors.location}
+//                   sx={{ gridColumn: "span 4" }}
+//                 />
+//               </>
+//             )}
 
-        if (response.ok) {
-          //Handle successful verification
-          dispatch(setVerificationSuccess(true));
-          console.log(result.message);
-          // Redirect to login page after successful verification
-          navigate("/login");
-        } else {
-          dispatch(setVerificationError(true));
-          console.error(result.error);
-        }
-      } catch (error) {
-        console.error("Error during verification:", error);
-      }
-    }
-  };
+//             <TextField
+//               label="Email"
+//               onBlur={handleBlur}
+//               onChange={handleChange}
+//               value={values.email}
+//               name="email"
+//               error={Boolean(touched.email) && Boolean(errors.email)}
+//               helperText={touched.email && errors.email}
+//               sx={{ gridColumn: "span 4" }}
+//             />
+//             <TextField
+//               label="Password"
+//               type="password"
+//               onBlur={handleBlur}
+//               onChange={handleChange}
+//               value={values.password}
+//               name="password"
+//               error={Boolean(touched.password) && Boolean(errors.password)}
+//               helperText={touched.password && errors.password}
+//               sx={{ gridColumn: "span 4" }}
+//             />
+//           </Box>
 
-  useEffect(() => {
-    verifyUser();
-  }, [navigate]);
+//           {/* BUTTONS */}
+//           <Box>
+//             <Button
+//               fullWidth
+//               type="submit"
+//               sx={{
+//                 m: "2rem 0",
+//                 p: "1rem",
+//                 backgroundColor: "#14D974",
+//                 color: "#FFFFFF",
+//                 "&:hover": { backgroundColor: "#7CF5B7" },
+//               }}
+//             >
+//               {isLogin ? "LOGIN" : "REGISTER"}
+//             </Button>
+//             <Typography
+//               onClick={() => {
+//                 setPageType(isLogin ? "register" : "login");
+//                 resetForm();
+//               }}
+//               sx={{
+//                 textDecoration: "underline",
+//                 color: "#666666",
+//                 "&:hover": {
+//                   cursor: "pointer",
+//                   color: "#F0F0F0",
+//                 },
+//               }}
+//             >
+//               {isLogin
+//                 ? "Don't have an account? Sign Up here."
+//                 : "Already have an account? Login here."}
+//             </Typography>
+//           </Box>
 
-  return (
-    <Formik
-      onSubmit={handleFormSubmit}
-      initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
-      validationSchema={isLogin ? loginSchema : registerSchema}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        handleBlur,
-        handleChange,
-        handleSubmit,
-        setFieldValue,
-        resetForm,
-      }) => (
-        <form onSubmit={handleSubmit}>
-          <Box
-            display="grid"
-            gap="30px"
-            gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-            sx={{
-              "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-            }}
-          >
-            {isRegister && (
-              <>
-                <TextField
-                  label="Name"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.name}
-                  name="name"
-                  error={Boolean(touched.name) && Boolean(errors.name)}
-                  helperText={touched.name && errors.name}
-                  sx={{ gridColumn: "span 4" }}
-                />
-                <TextField
-                  label="Location"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.location}
-                  name="location"
-                  error={Boolean(touched.location) && Boolean(errors.location)}
-                  helperText={touched.location && errors.location}
-                  sx={{ gridColumn: "span 4" }}
-                />
-              </>
-            )}
+//           {/* Verification Page */}
+//           {/* {isRegister && <VerificationPage />} */}
+//         </form>
+//       )}
+//     </Formik>
+//   );
+// };
 
-            <TextField
-              label="Email"
-              onBlur={handleBlur}
-              onChange={handleChange}
-              value={values.email}
-              name="email"
-              error={Boolean(touched.email) && Boolean(errors.email)}
-              helperText={touched.email && errors.email}
-              sx={{ gridColumn: "span 4" }}
-            />
-            <TextField
-              label="Password"
-              type="password"
-              onBlur={handleBlur}
-              onChange={handleChange}
-              value={values.password}
-              name="password"
-              error={Boolean(touched.password) && Boolean(errors.password)}
-              helperText={touched.password && errors.password}
-              sx={{ gridColumn: "span 4" }}
-            />
-          </Box>
-
-          {/* BUTTONS */}
-          <Box>
-            <Button
-              fullWidth
-              type="submit"
-              sx={{
-                m: "2rem 0",
-                p: "1rem",
-                backgroundColor: "#14D974",
-                color: "#FFFFFF",
-                "&:hover": { backgroundColor: "#7CF5B7" },
-              }}
-            >
-              {isLogin ? "LOGIN" : "REGISTER"}
-            </Button>
-            <Typography
-              onClick={() => {
-                setPageType(isLogin ? "register" : "login");
-                resetForm();
-              }}
-              sx={{
-                textDecoration: "underline",
-                color: "#666666",
-                "&:hover": {
-                  cursor: "pointer",
-                  color: "#F0F0F0",
-                },
-              }}
-            >
-              {isLogin
-                ? "Don't have an account? Sign Up here."
-                : "Already have an account? Login here."}
-            </Typography>
-          </Box>
-
-          {/* Verification Page */}
-          {isRegister && <VerificationPage />}
-        </form>
-      )}
-    </Formik>
-  );
-};
-
-export default Form;
+// export default Form;

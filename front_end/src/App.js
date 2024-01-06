@@ -1,22 +1,21 @@
-import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
-import LoginPage from "scenes/loginPage";
-import { useSelector } from "react-redux";
-import VerificationPage from "scenes/loginPage/VerificationPage";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import RegistrationForm from 'scenes/loginPage/RegistrationForm';
+import VerificationPage from 'scenes/loginPage/VerificationPage';
+import EmailVerification from 'scenes/loginPage/EmailVerification';
+import LoginForm from 'scenes/loginPage/LoginForm';
 
-
-function App() {
-
+const App = () => {
   return (
-    <div className="app">
-        <BrowserRouter>     
-            <Routes>
-              <Route path="/" element={<LoginPage />} />
-              <Route path="/verification" element={<VerificationPage />} />
-            </Routes>
-        </BrowserRouter>
-        
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/register" element={<RegistrationForm />} />
+        <Route path="/auth/confirm/:token" element={<EmailVerification />} />
+        {/* <Route path="/auth/confirm/:token" element={<VerificationPage />} /> */}
+        <Route path="/login" element={<LoginForm />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;

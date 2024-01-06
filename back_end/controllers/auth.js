@@ -1,6 +1,5 @@
 import bcrypt from  "bcrypt";
 import User from "../models/User.js";
-import  { generateLogToken } from "../utils/sendEmail.js";
 import Token from "../models/Token.js";
 import crypto from "crypto";
 import express from "express";
@@ -27,8 +26,8 @@ user = new User({
 await user.save();
 
 //generate verification token
-    const token = new Token (
-        {userId: user._id,
+    const token = new Token ({
+            userId: user._id,
             token:crypto.randomBytes(16).toString("hex"),
         });
 
@@ -90,7 +89,31 @@ router.get("/confirm/:token", async (req, res) => {
   
       const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
 
-      if(isPasswordValid) {
+      if(isPasswordValid) {router.post("/login", async (req, res) => {
+        try {
+          const user = await User.findOne({ email: req.body.email });
+      
+          if (!user) {
+            return res.status(404).json({ error: "User not found" });
+          }
+      
+          if (!user.verified) {
+            return res.status(401).json({ error: "Email not verified. Please check your email for verification." });
+          }
+      
+          const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+      
+          if (isPasswordValid) {
+            return res.json({ message: "Login successful!" });
+          }
+      
+          return res.status(401).send("Invalid Password");
+        } catch (error) {
+          console.error("Login error:", error);
+          return res.status(500).json({ error: "Internal Server Error" });
+        }
+      });
+      
         return res.json({ message: "Login successful!" });
       }
   
@@ -129,7 +152,7 @@ router.get("/confirm/:token", async (req, res) => {
     }
 });
 
-router.get("/reset-password/:token", async (req, res) => {
+router.post("/reset-password/:token", async (req, res) => {
     try {
         const token = req.params.token;
         const user = await User.findOne({
