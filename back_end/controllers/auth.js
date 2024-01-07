@@ -8,76 +8,89 @@ import sendResetMail from "../utils/sendResetMail.js";
 
 const router = express.Router();
 
-router.post("/register",
- async(req, res) => {
-    let user = await User.findOne({email: req.body.email});
+
+router.post("/register", async (req, res) => {
+  try {
+    // Check if required fields are provided
+    if (!req.body.name || !req.body.location || !req.body.email || !req.body.password) {
+      return res.status(400).send("Name, location, email, and password are required");
+    }
+
+    let user = await User.findOne({ email: req.body.email });
 
     if (user) {
-    return res.status(400).send("User with given email already exists!");
-}
+      return res.status(400).send("User with given email already exists!");
+    }
 
-user = new User({
-    name: req.body.name,
-    location: req.body.location,
-    email: req.body.email,
-    password: await bcrypt.hash(req.body.password, 10),
+    
+
+    // Create a new user with email and generate OTP
+    user = new User({
+      name: req.body.name,
+      location: req.body.location,
+      email: req.body.email,
+      password: await bcrypt.hash(req.body.password, 10),
+      otp: Math.floor(100000 + Math.random() * 900000).toString(),
+      otpExpiration: Date.now() + 300000, // OTP expiration time (5 minutes)
+      verified: false, // Set initial verification status to false
+    });
+
+    await user.save();
+
+    // Send email with OTP
+    const link = `Your OTP is: ${user.otp}`;
+    await verifyMail(user.email, link);
+
+    res.status(200).send({
+      message: "OTP sent to your email. Check your mail",
+    });
+  } catch (error) {
+    console.error("Registration error:", error);
+
+    // Handle bcrypt hashing error
+    if (error.name === 'TypeError' && error.message.includes('data and salt arguments required')) {
+      return res.status(500).json({ error: "Internal Server Error - Bcrypt hashing issue" });
+    }
+
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
-await user.save();
 
-//generate verification token
-    const token = new Token ({
-            userId: user._id,
-            token:crypto.randomBytes(16).toString("hex"),
-        });
+router.post('/confirm-otp', async (req, res) => {
+  const { email, enteredOTP } = req.body;
 
-        await token.save();
-        console.log(token);
+  try {
+    // Find the user in the database
+    const user = await User.findOne({ email });
 
-    //SEND MAIL
-    const link = `http://localhost:3001/auth/confirm/${token.token}`;
-    await verifyMail(user.email, link);
-    res.status(200).send({
-        message: "Email send check your mail"
-    })
-} 
-);
-
-//ACTIVATE ACCOUNT
-router.get("/confirm/:token", async (req, res) => {
-    try {
-      console.log("Confirmation route triggered");
-      const token = await Token.findOne({
-        token: req.params.token,
-      });
-  
-      console.log("Received token:", token);
-  
-      if (!token) {
-        console.log("Token not found");
-        return res.status(404).json({ error: "Token not found" });
-      }
-  
-      const user = await User.findById(token.userId);
-      if (!user) {
-        console.log("User not found for the given token");
-        return res.status(404).json({ error: "User not found for the given token" });
-      }
-  
-      console.log("Updating user verification status");
-      await User.updateOne({ _id: token.userId }, { $set: { verified: true } });
-  
-      // Optionally, log the updated user
-      const updatedUser = await User.findById(token.userId);
-      console.log("Updated user:", updatedUser);
-  
-      return res.status(200).send("Email verified");
-    } catch (error) {
-      console.error("Error verifying email:", error);
-      return res.status(400).send("An error occurred during verification");
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
-  });
-  
+
+    console.log('Stored OTP:', user.otp);
+    console.log('Entered OTP:', enteredOTP);
+    console.log('OTP Expiration:', user.otpExpiration);
+
+    // Check if the OTP is valid
+    if (user.otp === enteredOTP && user.otpExpiration instanceof Date && user.otpExpiration > Date.now()) {
+      // Mark the user as verified
+      user.verified = true;
+      await user.save();
+
+      // Respond with a success message
+      return res.status(200).json({ message: 'OTP verified successfully' });
+    } else {
+      // Respond with an error message
+      return res.status(401).json({ error: 'Invalid or expired OTP' });
+    }
+  } catch (error) {
+    console.error('OTP verification error:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
   router.post("/login", async (req, res) => {
     try {

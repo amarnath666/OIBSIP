@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { TextField, Button, Grid, Typography, Paper } from '@mui/material';
+import { TextField, Button, Grid, Typography, Paper, CircularProgress } from '@mui/material';
 import axios from 'axios';
 
 const RegistrationForm = () => {
@@ -11,7 +11,8 @@ const RegistrationForm = () => {
     email: '',
     password: '',
   });
-  const [registrationMessage, setRegistrationMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [registrationError, setRegistrationError] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,18 +22,26 @@ const RegistrationForm = () => {
     e.preventDefault();
 
     try {
+      // Set loading to true to show the loading indicator
+      setLoading(true);
+
+      // If no frontend errors, proceed to backend registration
       const response = await axios.post('http://localhost:3001/auth/register', formData);
-      console.log(response.data);
 
-      
-      if (response.status === 200) {
-        setRegistrationMessage('Registration successful. Check your email for verification.');
-
-        // Redirect to login page after successful registration
-        navigate('/login');
-      }
+      // Redirect to OTP verification page immediately
+      navigate(`/otp-verification?email=${formData.email}`);
     } catch (error) {
       console.error('Registration error:', error);
+
+      // Check for specific backend error conditions
+      if (error.response && error.response.status === 400) {
+        setRegistrationError('Email is already in use. Please choose another email.');
+      } else {
+        setRegistrationError('An unexpected error occurred. Please try again.');
+      }
+    } finally {
+      // Set loading back to false after the registration process completes
+      setLoading(false);
     }
   };
 
@@ -43,7 +52,8 @@ const RegistrationForm = () => {
           <Typography variant="h5" gutterBottom>
             Registration
           </Typography>
-          {registrationMessage && <Typography color="success">{registrationMessage}</Typography>}
+          {loading && <CircularProgress style={{ marginBottom: '10px' }} />}
+          {registrationError && <Typography color="error">{registrationError}</Typography>}
           <form onSubmit={handleSubmit}>
             <TextField fullWidth label="Name" name="name" onChange={handleChange} margin="normal" required />
             <TextField fullWidth label="Location" name="location" onChange={handleChange} margin="normal" required />

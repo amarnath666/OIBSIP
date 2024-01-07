@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const tokenSchema = new Schema ({
+        otp: {
+                type: String
+            },
+            otpExpiration: {
+                type: Date
+            },
         userId: {
             type: String,
             ref: "user",

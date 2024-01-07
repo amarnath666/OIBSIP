@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-import { TextField, Button, Grid, Typography, Paper } from '@mui/material';
-import axios from 'axios';
+import { useNavigate } from "react-router";
+import { useState } from "react";
+import axios from "axios";
+import { Grid,Paper, Typography,TextField,Button } from "@mui/material";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const [loginError, setLoginError] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,13 +20,19 @@ const LoginForm = () => {
 
     try {
       const response = await axios.post('http://localhost:3001/auth/login', formData);
-      console.log(response.data);
 
       if (response.status === 200) {
         // Handle successful login
+        navigate("/home");
       }
     } catch (error) {
       console.error('Login error:', error);
+
+      if (error.response && error.response.status === 401) {
+        setLoginError('Incorrect email or password. Please try again.');
+      } else {
+        setLoginError('Incorrect email or password. Please try again.');
+      }
     }
   };
 
@@ -57,6 +66,7 @@ const LoginForm = () => {
               Login
             </Button>
           </form>
+          {loginError && <Typography color="error" style={{ marginTop: '10px' }}>{loginError}</Typography>}
         </Paper>
       </Grid>
     </Grid>
