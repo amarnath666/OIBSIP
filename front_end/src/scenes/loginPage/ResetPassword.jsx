@@ -1,15 +1,17 @@
-import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 import { Grid, Paper, Typography, TextField, Button } from '@mui/material';
+import { useNavigate } from 'react-router';
 
-const LoginForm = () => {
-  const navigate = useNavigate();
+const ResetPassword = () => {
+    const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: '',
+    resetOTP: '',
     password: '',
   });
-  const [loginError, setLoginError] = useState('');
+  const [resetError, setResetError] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,19 +21,22 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3001/auth/login', formData);
+      // Make an API call to reset the password
+      const response = await axios.post('http://localhost:3001/auth/reset-password', formData);
 
       if (response.status === 200) {
-        // Handle successful login
-        navigate("/");
+       navigate("/login");
+        
+        console.log('Password reset successfully');
+        
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Reset password error:', error);
 
-      if (error.response && error.response.status === 401) {
-        setLoginError('Incorrect email or password. Please try again.');
+      if (error.response && error.response.status === 400) {
+        setResetError('Invalid or expired OTP. Please try again.');
       } else {
-        setLoginError('Incorrect email or password. Please try again.');
+        setResetError('Error resetting password. Please try again.');
       }
     }
   };
@@ -41,8 +46,9 @@ const LoginForm = () => {
       <Grid item xs={10} sm={8} md={6} lg={4}>
         <Paper elevation={3} style={{ padding: '20px' }}>
           <Typography variant="h5" gutterBottom>
-            Login
+            Reset Password
           </Typography>
+          <Typography>OTP has been sent to your email. Please check your mail.</Typography>
           <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
@@ -55,25 +61,31 @@ const LoginForm = () => {
             />
             <TextField
               fullWidth
+              type="text"
+              label="Reset OTP"
+              name="resetOTP"
+              onChange={handleChange}
+              margin="normal"
+              required
+            />
+            <TextField
+              fullWidth
               type="password"
-              label="Password"
+              label="New Password"
               name="password"
               onChange={handleChange}
               margin="normal"
               required
             />
             <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
-              Login
+              Reset Password
             </Button>
           </form>
-          {loginError && <Typography color="error" style={{ marginTop: '10px' }}>{loginError}</Typography>}
-          <Typography variant="body2" style={{ marginTop: '10px' }}>
-            <Link to="/forgot-password">Forgot Password?</Link>
-          </Typography>
+          {resetError && <Typography color="error" style={{ marginTop: '10px' }}>{resetError}</Typography>}
         </Paper>
       </Grid>
     </Grid>
   );
 };
 
-export default LoginForm;
+export default ResetPassword;

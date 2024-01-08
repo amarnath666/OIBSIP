@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-const sendResetMail = async (email, link) => {
+const sendResetMail = async (email, text) => {
     try {
         const transporter = nodemailer.createTransport({
             service: "Gmail",
@@ -10,19 +10,17 @@ const sendResetMail = async (email, link) => {
             },
         });
 
-        //SEND EMAIL
+        // SEND EMAIL
         let info = await transporter.sendMail({
             from: process.env.USER,
             to: email,
-            subject: "Reset Password",
-
-            text: "Rest your password",
-            html: `<div><a href=${link}>Click here to reset your password</a></div>`,
+            subject: "One-Time Password (OTP)", // Fix typo here
+            text: text, // Use the provided OTP text
         });
         console.log("Reset password email sent successfully");
-    }catch(error) {
+    } catch (error) {
         console.error("Reset password email failed to send:", error);
     }
- }
+}
 
- export default sendResetMail;
+export default sendResetMail;

@@ -22,25 +22,23 @@ const RegistrationForm = () => {
     e.preventDefault();
 
     try {
-      // Set loading to true to show the loading indicator
       setLoading(true);
 
-      // If no frontend errors, proceed to backend registration
       const response = await axios.post('http://localhost:3001/auth/register', formData);
 
-      // Redirect to OTP verification page immediately
+      // Inform the user to wait for OTP
+      setRegistrationError('Registration successful. Please wait while we send the OTP.');
+
       navigate(`/otp-verification?email=${formData.email}`);
     } catch (error) {
       console.error('Registration error:', error);
 
-      // Check for specific backend error conditions
       if (error.response && error.response.status === 400) {
         setRegistrationError('Email is already in use. Please choose another email.');
       } else {
         setRegistrationError('An unexpected error occurred. Please try again.');
       }
     } finally {
-      // Set loading back to false after the registration process completes
       setLoading(false);
     }
   };
@@ -52,7 +50,12 @@ const RegistrationForm = () => {
           <Typography variant="h5" gutterBottom>
             Registration
           </Typography>
-          {loading && <CircularProgress style={{ marginBottom: '10px' }} />}
+          {loading && (
+            <React.Fragment>
+              <CircularProgress style={{ marginBottom: '10px' }} />
+              <Typography style={{ marginBottom: '10px' }}>Please wait while we send the OTP...</Typography>
+            </React.Fragment>
+          )}
           {registrationError && <Typography color="error">{registrationError}</Typography>}
           <form onSubmit={handleSubmit}>
             <TextField fullWidth label="Name" name="name" onChange={handleChange} margin="normal" required />

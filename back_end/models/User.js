@@ -28,10 +28,10 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    resetToken: {
+    resetOTP: {
         type: String
     },
-    resetTokenExpiration: {
+    resetOTPExpiration: {
         type: Date
     }
 },  { timestamps: true }
