@@ -2,13 +2,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 import { Grid, Paper, Typography, TextField, Button } from '@mui/material';
+import { login, setAdmin } from 'scenes/state/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const LoginForm = () => {
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+
   const [loginError, setLoginError] = useState('');
 
   const handleChange = (e) => {
@@ -22,7 +28,8 @@ const LoginForm = () => {
       const response = await axios.post('http://localhost:3001/auth/login', formData);
 
       if (response.status === 200) {
-        // Handle successful login
+        dispatch(login());
+        
         navigate("/");
       }
     } catch (error) {

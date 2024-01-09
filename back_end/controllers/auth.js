@@ -198,9 +198,9 @@ router.post("/admin-login", async (req, res) => {
 
 router.post("/logout", (req, res) => {
   try {
-    // Clear user session data or perform any necessary logout actions
-    req.session.user = null; // Assuming a hypothetical user session variable
-
+    if (req.session) {
+      req.session.destroy(); // Destroy the session
+    }
     return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     console.error("Logout error:", error);

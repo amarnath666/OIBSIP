@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Grid, Paper, Typography, TextField, Button } from '@mui/material';
+import { setAdmin } from 'scenes/state/authSlice';
+import { login } from 'scenes/state/authSlice';
+import { useDispatch } from 'react-redux';
 
 const AdminLogin = () => {
     const navigate = useNavigate();
@@ -11,6 +14,7 @@ const AdminLogin = () => {
     });
     const [loginError, setLoginError] = useState('');
 
+    const dispatch = useDispatch();
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -19,9 +23,10 @@ const AdminLogin = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:3001/auth/admin-login', formData);
+          const response = await axios.post('http://localhost:3001/auth/admin-login', formData);
 
             if (response.status === 200) {
+                dispatch(setAdmin());
                 navigate("/admin");
                 console.log('Admin login successful');
             }
