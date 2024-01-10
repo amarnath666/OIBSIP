@@ -8,6 +8,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import authControllers from "./controllers/auth.js";
+import pizzaVarieties from "./init/data.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -33,6 +34,10 @@ app.use(
 
 /* ROUTES */
 app.use("/auth", authControllers);
+
+app.get("/pizza-varieties", (req, res) => {
+  res.json(pizzaVarieties);
+});
 
 /* MONGOOSE SETUP */
 mongoose.connect(process.env.MONGODB_URL);
