@@ -9,6 +9,8 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import authControllers from "./controllers/auth.js";
 import pizzaVarieties from "./init/data.js";
+import { baseOptions, sauceOptions, cheeseOptions, veggieOptions } from "./init/customPizza.js";
+
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -37,6 +39,17 @@ app.use("/auth", authControllers);
 
 app.get("/pizza-varieties", (req, res) => {
   res.json(pizzaVarieties);
+});
+
+app.get("/custom-pizza", (req, res) => {
+  const customPizza = {
+    baseOptions,
+    sauceOptions,
+    cheeseOptions,
+    veggieOptions,
+  };
+
+  res.json(customPizza);
 });
 
 /* MONGOOSE SETUP */

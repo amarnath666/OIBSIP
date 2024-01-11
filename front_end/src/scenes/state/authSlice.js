@@ -4,6 +4,12 @@ const initialState = {
   isAuthenticated: false,
   isAdmin: false,
   pizzaVarieties: [],
+  selectedOptions: {
+    base: null,
+    sauce: null,
+    cheese: null,
+    veggie: []
+  }
 };
 
 const authSlice = createSlice({
@@ -23,9 +29,13 @@ const authSlice = createSlice({
     },
     setPizzaVarieties: (state, action) => {
       state.pizzaVarieties = action.payload;
+    },
+    setSelectedOptions: (state, action) => {
+      const {category, variety} = action.payload;
+      state.selectedOptions[category] = variety;
     }
   },
 });
 
-export const { login, logout, setAdmin, setPizzaVarieties } = authSlice.actions;
+export const { login, logout, setAdmin, setPizzaVarieties, setSelectedOptions } = authSlice.actions;
 export default authSlice.reducer;
