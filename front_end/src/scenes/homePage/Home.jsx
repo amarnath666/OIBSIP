@@ -1,14 +1,14 @@
 import React from "react";
 import NavBar from "scenes/homePage/Navbar";
 import PizzaList from "scenes/PizzaComponent/PizzaList";
-import PizzaBuilder from "scenes/CustomPizza/PizzaBuilder";
+import PizzaOptionsPage from "./PizzaOptionsPage";
 
 const Home = () => {
     return (
         <div>
             <NavBar />
             <PizzaList />
-            <PizzaBuilder />
+            <PizzaOptionsPage />
         </div>
   );
 };
