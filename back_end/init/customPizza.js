@@ -1,9 +1,12 @@
 export const baseOptions = [
-    { id: 1, name: 'Thin Crust', description: 'Thin and crispy crust' },
-    { id: 2, name: 'Hand-Tossed', description: 'Classic hand-tossed crust, offering a balanced thickness and texture.' },
-    { id: 3, name: 'Pan Pizza', description: 'Thick and fluffy pan pizza crust, delivering a satisfying chewiness.' },
-    { id: 4, name: 'Stuffed Crust', description: 'Indulge in the thick and fluffy goodness of our stuffed crust, filled with gooey cheese.' },
-    { id: 5, name: 'Gluten-Free', description: 'A gluten-free option for those with dietary preferences, providing a delicious pizza experience without compromising on taste.' },
+    { id: 1, name: 'Thin Crust', description: 'Thin and crispy crust', img: "https://cdn.tarladalal.com/members/9306/big/big_thin_crust_pizza_base-9302.jpg" },
+    { id: 2,
+      name: 'Hand-Tossed', 
+      description: "Classic hand-tossed crust, offering a balanced thickness and texture.", 
+      img: "https://jahzkitchen.com/wp-content/uploads/2021/06/Hand-Tossed-Pizza.jpg" },
+    { id: 3, name: 'Pan Pizza', description: 'Thick and fluffy pan pizza crust, delivering a satisfying chewiness.', img: "https://www.theflourhandprint.com/wp-content/uploads/2022/10/fluffy-pizza-dough-recipe-3.jpg" },
+    { id: 4, name: 'Stuffed Crust', description: 'Indulge in the thick and fluffy goodness of our stuffed crust, filled with gooey cheese.' , img: "https://sallysbakingaddiction.com/wp-content/uploads/2017/03/stuffed-crust-pizza-5.jpg"},
+    { id: 5, name: 'Whole Wheat', description: 'A healthy whole wheat crust option.', img: "https://www.bigbasket.com/media/uploads/p/l/40004959_3-fresho-freshly-baked-whole-wheat-pizza-base.jpg" },
   ];
   
   export const sauceOptions = [

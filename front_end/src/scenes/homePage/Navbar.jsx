@@ -45,9 +45,6 @@ const NavBar = () => {
         }
     };
 
-    console.log("isAuthenticated:", isAuthenticated);
-    console.log("isAdmin:", isAdmin);
-
     return (
         <AppBar position="sticky">
             <Toolbar>
