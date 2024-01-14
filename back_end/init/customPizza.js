@@ -18,7 +18,8 @@ export const baseOptions = [
         name: 'Tomato',
         description: 'Enjoy the natural sweetness and vibrant flavor of fresh tomato sauce.',
         img: 'https://upload.wikimedia.org/wikipedia/commons/5/52/Fresh_Tomato_Sauce_%28Unsplash%29.jpg'
-      }
+      },
+    {  id:5, name: "Garlic Parmesan", img: "https://therecipecritic.com/wp-content/uploads/2023/06/garlic_parmesan_sauce-1.jpg" },
   ];
   
   export const cheeseOptions = [

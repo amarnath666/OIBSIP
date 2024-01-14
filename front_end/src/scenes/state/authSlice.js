@@ -9,7 +9,7 @@ export const fetchPizzaOptions = createAsyncThunk(
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      console.log('Pizza options data:', data); 
+      console.log('Pizza options data:', data);
       return data;
     } catch (error) {
       console.error('Error fetching pizza options:', error);
@@ -26,7 +26,7 @@ const initialState = {
   sauceOptions: [],
   cheeseOptions: [],
   veggieOptions: [],
-  selectedOptions: { 
+  selectedOptions: {
     base: null,
     sauce: null,
     cheese: null,
@@ -52,40 +52,26 @@ const authSlice = createSlice({
       state.pizzaVarieties = action.payload;
     },
     setBase: (state, action) => {
-      console.log('setBase Action:', action);
       state.selectedOptions.base = action.payload;
     },
-
     setSauce: (state, action) => {
-      console.log('setSauce Action:', action);
       state.selectedOptions.sauce = action.payload;
     },
-
     setCheese: (state, action) => {
-      console.log('setCheese Action:', action);
       state.selectedOptions.cheese = action.payload;
     },
-
     setVeggie: (state, action) => {
-      console.log('setVeggie Action:', action);
       state.selectedOptions.veggie = action.payload;
     },
-    setPizzaOptions: (state, action) => {
-      state.baseOptions = action.payload.payload.baseOptions;
-      state.sauceOptions = action.payload.payload.sauceOptions;
-      state.cheeseOptions = action.payload.payload.cheeseOptions;
-      state.veggieOptions = action.payload.payload.veggieOptions;
-    },
-    
-    extraReducers: (builder) => {
-      builder.addCase(fetchPizzaOptions.fulfilled, (state, action) => {
-        console.log('Pizza options data:', action.payload);
-        state.baseOptions = action.payload.baseOptions;
-        state.sauceOptions = action.payload.sauceOptions;
-        state.cheeseOptions = action.payload.cheeseOptions;
-        state.veggieOptions = action.payload.veggieOptions;
-      });
-    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchPizzaOptions.fulfilled, (state, action) => {
+      console.log('Pizza options data:', action.payload);
+      state.baseOptions = action.payload.baseOptions;
+      state.sauceOptions = action.payload.sauceOptions;
+      state.cheeseOptions = action.payload.cheeseOptions;
+      state.veggieOptions = action.payload.veggieOptions;
+    });
   },
 });
 
@@ -98,6 +84,17 @@ export const {
   setCheese,
   setSauce,
   setVeggie,
-  setPizzaOptions,
 } = authSlice.actions;
 export default authSlice.reducer;
+
+export const setPizzaOptions = (baseOptions, sauceOptions, cheeseOptions, veggieOptions) => {
+  return {
+    type: 'auth/setPizzaOptions',
+    payload: {
+      baseOptions,
+      sauceOptions,
+      cheeseOptions,
+      veggieOptions,
+    },
+  };
+};

@@ -8,10 +8,14 @@ import {
   fetchPizzaOptions,
   setPizzaOptions
 } from 'scenes/state/authSlice';
-import { Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { Button, Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { CheckCircleOutline } from '@mui/icons-material';
+import IconButton from '@mui/material/IconButton';
+import { useNavigate } from 'react-router';
 
 const PizzaOptions = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Use useSelector to get the relevant data from your Redux state
   const { baseOptions, sauceOptions, cheeseOptions, veggieOptions, selectedOptions } = useSelector(state => state.auth);
@@ -20,7 +24,6 @@ const PizzaOptions = () => {
     const fetchOptions = async () => {
       try {
         const options = await dispatch(fetchPizzaOptions());
-        // Assuming fetchPizzaOptions returns the relevant data for setPizzaOptions
         dispatch(setPizzaOptions(options));
       } catch (error) {
         console.error('Error fetching pizza options:', error);
@@ -36,7 +39,7 @@ const PizzaOptions = () => {
   if (!baseOptions || !sauceOptions || !cheeseOptions || !veggieOptions) {
     return <div>Loading...</div>;
   }
-  
+
   const handleOptionSelect = (optionType, option) => {
     switch (optionType) {
       case 'base':
@@ -56,41 +59,67 @@ const PizzaOptions = () => {
     }
   };
 
-  const renderOptions = (options, optionType, selectedOption) => (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-      {options.map((option) => (
-        <Card
-          key={option.id}
-          onClick={() => handleOptionSelect(optionType, option)}
-          sx={{
-            width: 200,
-            margin: 1,
-            cursor: 'pointer',
-            backgroundColor: selectedOption === option ? 'lightblue' : 'white',
-          }}
-        >
-          <CardMedia component="img" height="140" image={option.img} alt={option.name} />
-          <CardContent>
-            <Typography variant="subtitle1">{option.name}</Typography>
-          </CardContent>
-        </Card>
-      ))}
+  const renderOptions = (options, optionType, selectedOption, categoryText) => (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1rem' }}>
+      <Typography variant="h4" style={{ marginBottom: '0.5rem' }}>{categoryText}</Typography>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly', width: '100%' }}>
+        {options.map((option, index) => (
+          <Card
+            key={option.id}
+            onClick={() => handleOptionSelect(optionType, option)}
+            sx={{
+              width: 200,
+              margin: 1,
+              cursor: 'pointer',
+              backgroundColor: selectedOption === option ? 'lightblue' : 'white',
+              position: 'relative',
+             
+            }}
+          >
+            <CardMedia component="img" height="140" image={option.img} alt={option.name} />
+            <CardContent style={{ textAlign: 'center' }}>
+              <Typography  variant="subtitle1">{option.name}</Typography>
+              {selectedOption === option && (
+                <IconButton
+                  style={{ position: 'absolute', top: 0, right: 0 }}
+                  color="primary"
+                >
+                  <CheckCircleOutline />
+                </IconButton>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 
+  const customizedPizza = () => {
+    if (selectedOptions.base && selectedOptions.sauce && selectedOptions.cheese && selectedOptions.veggie) {
+      navigate("customizedPizza");
+    } else {
+      console.warn("Please select one option from each category before proceeding.");
+    }
+  };
+
   return (
-    <div>
-      <h2>Base Options</h2>
-      {renderOptions(baseOptions, 'base', selectedOptions.base)}
+    <div style={{ textAlign: 'center' }}>
+      {renderOptions(baseOptions, 'base', selectedOptions.base, 'Base')}
 
-      <h2>Sauce Options</h2>
-      {renderOptions(sauceOptions, 'sauce', selectedOptions.sauce)}
+      {renderOptions(sauceOptions, 'sauce', selectedOptions.sauce, 'Sauce')}
 
-      <h2>Cheese Options</h2>
-      {renderOptions(cheeseOptions, 'cheese', selectedOptions.cheese)}
+      {renderOptions(cheeseOptions, 'cheese', selectedOptions.cheese, 'Cheese')}
 
-      <h2>Veggie Options</h2>
-      {renderOptions(veggieOptions, 'veggie', selectedOptions.veggie)}
+      {renderOptions(veggieOptions, 'veggie', selectedOptions.veggie, 'Veggie')}
+
+      <Button
+        onClick={customizedPizza}
+        variant="contained"
+        color="primary"
+        style={{ marginTop: '1rem', width: '150px' }}
+      >
+        Customize
+      </Button>
     </div>
   );
 };
