@@ -129,7 +129,6 @@ const CustomizedPizza = () => {
       pizza.veggie === veggie.name
   );
 
-  
   if (!customizedPizza) {
     return (
       <div style={{ textAlign: 'center', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -141,26 +140,21 @@ const CustomizedPizza = () => {
 
   const imagePath = `${process.env.PUBLIC_URL}/${customizedPizza.img}`;
 
-  
   return (
     <div>
       <NavBar />
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        {/* Image Card */}
-        <Card style={{ maxWidth: 450, maxHeight:300, boxShadow: 'none' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', marginTop: "2rem"}}>
+        {/* Single Card */}
+        <Card style={{ maxWidth: 350, marginBottom: '1rem' }}>
           <CardMedia
             component="img"
             alt={customizedPizza.name}
-            style={{ height: '300', width: '100%' }}
+            style={{ width: '100%', objectFit: 'cover' }}
             image={imagePath}
           />
-        </Card>
-  
-        {/* Text Card */}
-        <Card style={{ maxWidth: 400, boxShadow: 'none', marginLeft: "0.5rem"}}>
-          <CardContent style={{ padding: '16px', boxSizing: 'border-box' }}>
+          <CardContent style={{ boxSizing: 'border-box', width: '100%', paddingTop: 16 }}>
             <Typography variant="h4" fontWeight={600}>{customizedPizza.name}</Typography>
-            <Typography variant="body2" style={{ paddingBottom: 8, marginTop: 8}}>{customizedPizza.description}</Typography>
+            <Typography variant="body2" style={{ paddingBottom: 8, marginTop: 8 }}>{customizedPizza.description}</Typography>
             <Typography variant="body2" style={{ paddingBottom: 8 }}>
               Base: {customizedPizza.base}, Sauce: {customizedPizza.sauce}, Cheese:{' '}
               {customizedPizza.cheese}, Veggie: {customizedPizza.veggie}
@@ -169,7 +163,7 @@ const CustomizedPizza = () => {
               <Typography variant="body2" fontWeight={550} fontSize={20}>
                 &#8377;{customizedPizza.price}
               </Typography>
-              <Button variant="contained" color="primary">
+              <Button variant="contained" color="primary" style={{ width: '100%', maxWidth: '45%', fontWeight: "500" }}>
                 Buy Now
               </Button>
             </div>
@@ -178,5 +172,6 @@ const CustomizedPizza = () => {
       </div>
     </div>
   );
-  };
+};
+
 export default CustomizedPizza;
