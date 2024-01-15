@@ -17,7 +17,6 @@ const PizzaOptions = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Use useSelector to get the relevant data from your Redux state
   const { baseOptions, sauceOptions, cheeseOptions, veggieOptions, selectedOptions } = useSelector(state => state.auth);
 
   useEffect(() => {
@@ -32,9 +31,6 @@ const PizzaOptions = () => {
 
     fetchOptions();
   }, [dispatch]);
-
-  console.log('Redux State:', { baseOptions, sauceOptions, cheeseOptions, veggieOptions, selectedOptions });
-  console.log('Selected Options:', selectedOptions);
 
   if (!baseOptions || !sauceOptions || !cheeseOptions || !veggieOptions) {
     return <div>Loading...</div>;
@@ -96,7 +92,15 @@ const PizzaOptions = () => {
 
   const customizedPizza = () => {
     if (selectedOptions.base && selectedOptions.sauce && selectedOptions.cheese && selectedOptions.veggie) {
-      navigate("customizedPizza");
+      navigate("customizedPizza", {
+        state: {
+          selectedOptions,
+          baseOptions, 
+          sauceOptions,
+          cheeseOptions,
+          veggieOptions,
+        }
+      });
     } else {
       console.warn("Please select one option from each category before proceeding.");
     }

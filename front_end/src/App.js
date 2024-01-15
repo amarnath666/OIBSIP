@@ -9,6 +9,7 @@ import ForgotPasswordForm from 'scenes/loginPage/ForgotPassword';
 import AdminLogin from 'scenes/loginPage/AdminLogin';
 import Home from 'scenes/homePage/Home';
 import Admin from 'scenes/AdminPage/Admin';
+import CustomizedPizza from 'scenes/CustomPizza/CustomizedPizza';
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
       <Route path="/login" element={<LoginForm />} />
       <Route path="/" element={<Home />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path='/customizedPizza' element={<CustomizedPizza />} />
     </Routes>
   );
 };

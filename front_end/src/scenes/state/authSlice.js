@@ -9,7 +9,6 @@ export const fetchPizzaOptions = createAsyncThunk(
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      console.log('Pizza options data:', data);
       return data;
     } catch (error) {
       console.error('Error fetching pizza options:', error);
@@ -66,7 +65,6 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchPizzaOptions.fulfilled, (state, action) => {
-      console.log('Pizza options data:', action.payload);
       state.baseOptions = action.payload.baseOptions;
       state.sauceOptions = action.payload.sauceOptions;
       state.cheeseOptions = action.payload.cheeseOptions;
