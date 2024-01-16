@@ -4,130 +4,59 @@ import { Typography, Card, CardContent, CardMedia, Button } from '@mui/material'
 import NavBar from "scenes/homePage/Navbar";
 
 const CustomizedPizza = () => {
-  const { selectedOptions } = useSelector((state) => state.auth);
+  const { baseOptions, sauceOptions, cheeseOptions, veggieOptions, selectedOptions } = useSelector(state => state.auth);
+
   const { base, sauce, cheese, veggie } = selectedOptions;
 
-  const preMadePizzas = [
-    {
-        id: 1,
-        name: 'Vegetarian Delight',
-        base: 'Thin Crust',
-        sauce: 'Classic Marinara',
-        cheese: 'Mozzarella',
-        veggie: 'Tomatoes',
-        description: 'A delightful vegetarian pizza with fresh tomatoes on a thin crust.',
-        price: 12.99,
-        img: 'Photo_1594928207551.webp',
-      },
-      {
-        id: 2,
-        name: 'Pepperoni Paradise',
-        base: 'Hand-Tossed',
-        sauce: 'Classic Marinara',
-        cheese: 'Mozzarella',
-        veggie: 'Bell Peppers',
-        description: 'A classic pepperoni pizza with bell peppers on a hand-tossed crust.',
-        price: 14.99,
-        img: 'Mexican_Green_Wave.jpg',
-      },
-      {
-        id: 3,
-        name: 'Mushroom Marvel',
-        base: 'Pan Pizza',
-        sauce: 'Garlic Parmesan',
-        cheese: 'Gouda',
-        veggie: 'Mushrooms',
-        description: 'Indulge in the marvel of mushrooms with garlic Parmesan sauce and Gouda cheese.',
-        price: 13.99,
-        img: 'Farmhouse.jpg',
-      },
-      {
-        id: 4,
-        name: 'Supreme Sensation',
-        base: 'Stuffed Crust',
-        sauce: 'Classic Marinara',
-        cheese: 'Cheddar',
-        veggie: 'Onions',
-        description: 'Experience a supreme sensation with stuffed crust, classic marinara, Cheddar, and onions.',
-        price: 15.99,
-        img: 'Farmhouse.jpg',
-      },
-      {
-        id: 5,
-        name: 'Margherita',
-        base: 'Whole Wheat',
-        sauce: 'Classic Marinara',
-        cheese: 'Mozzarella',
-        veggie: 'Tomatoes',
-        description: 'A classic Margherita pizza with whole wheat crust, marinara sauce, Mozzarella, and tomatoes.',
-        price: 12.99,
-        img: 'Farmhouse.jpg',
-      },
-      {
-        id: 6,
-        name: 'BBQ Chicken Bliss',
-        base: 'Hand-Tossed',
-        sauce: 'BBQ',
-        cheese: 'Cheddar',
-        veggie: 'Onions',
-        description: 'Savor the bliss of BBQ chicken with hand-tossed crust, BBQ sauce, Cheddar, and onions.',
-        price: 14.99,
-        img: 'PepperBarbecueChicken.jpg',
-      },
-      {
-        id: 7,
-        name: 'Pesto Paradise',
-        base: 'Thin Crust',
-        sauce: 'Pesto',
-        cheese: 'Parmesan',
-        veggie: 'Spinach',
-        description: 'Delicious pizza with pesto sauce, Parmesan cheese, and fresh spinach.',
-        price: 12.99,
-        img: 'whole-wheat-margherita-pizza.jpg',
-      },
-      {
-        id: 8,
-        name: 'Meat Lover’s Feast',
-        base: 'Stuffed Crust',
-        sauce: 'Classic Marinara',
-        cheese: 'Mozzarella',
-        veggie: 'Tomatoes',
-        description: 'A hearty feast for meat lovers with classic marinara sauce and Mozzarella cheese.',
-        price: 14.99,
-        img: 'Farmhouse.jpg',
-      },
-      {
-        id: 9,
-        name: 'Hawaiian Retreat',
-        base: 'Pan Pizza',
-        sauce: 'Tomato',
-        cheese: 'Mozzarella',
-        veggie: 'Pineapple',
-        description: 'Escape to the tropics with this Hawaiian pizza featuring tomato sauce and pineapple.',
-        price: 13.99,
-        img: 'Farmhouse.jpg',
-      },
-      {
-        id: 10,
-        name: 'Mediterranean Delight',
-        base: 'Whole Wheat',
-        sauce: 'Garlic Parmesan',
-        cheese: 'Feta',
-        veggie: 'Tomatoes',
-        description: 'Experience the flavors of the Mediterranean with garlic Parmesan sauce and Feta cheese.',
-        price: 15.99,
-        img: 'Farmhouse.jpg',
-      },
-  ];
+// URL for each type of pizza base
+const baseImages = {
+  'Thin Crust': 'https://static.toiimg.com/thumb/53351680.cms?imgsize=283388&width=800&height=800',
+  'Hand Tossed': 'https://img.freepik.com/premium-photo/isolated-pizza-with-mushrooms-olives_219193-8149.jpg',
+  'Pan Pizza': 'https://i.pinimg.com/originals/16/34/99/1634999e7e7cf5d98142c91a3e7afc9e.png',
+  'Stuffed Crust': 'https://www.vindulge.com/wp-content/uploads/2023/02/Vegetarian-Pizza-with-Caramelized-Onions-Mushrooms-Jalapeno-FI.jpg',
+  'Whole Wheat': 'https://www.superhealthykids.com/wp-content/uploads/2021/10/best-veggie-pizza-featured-image-square-2-500x500.jpg',
+};
 
-  
-  const customizedPizza = preMadePizzas.find(
-    (pizza) =>
-      pizza.base === base.name &&
-      pizza.sauce === sauce.name &&
-      pizza.cheese === cheese.name &&
-      pizza.veggie === veggie.name
-  );
+// Function to generate all possible combinations of pizzas
+const generateAllCombinations = () => {
+  const allCombinations = [];
+
+  // Iterate through each base option
+  baseOptions.forEach((base, baseIndex) => {
+    sauceOptions.forEach((sauce, sauceIndex) => {
+      cheeseOptions.forEach((cheese, cheeseIndex) => {
+        veggieOptions.forEach((veggies, veggieIndex) => {
+          const pizza = {
+            id: allCombinations.length + 1,
+            name: `Custom ${base.name} Pizza`,
+            base: base.name,
+            sauce: sauce.name,
+            cheese: cheese.name,
+            veggie: veggies.name,
+            description: `A customized ${base.name} pizza with ${veggie.name}, ${cheese.name} cheese, and ${sauce.name} sauce.`,
+            price: 12.99,
+            img: baseImages[base.name], 
+          };
+
+          allCombinations.push(pizza);
+        });
+      });
+    });
+  });
+
+  return allCombinations;
+};
+
+const allPizzas = generateAllCombinations();
+
+// Find the selected pizza in the array
+const customizedPizza = allPizzas.find(
+  (pizza) =>
+    pizza.base === base.name &&
+    pizza.sauce === sauce.name &&
+    pizza.cheese === cheese.name &&
+    pizza.veggie === veggie.name
+);
 
   if (!customizedPizza) {
     return (
@@ -138,28 +67,23 @@ const CustomizedPizza = () => {
     );
   }
 
-  const imagePath = `${process.env.PUBLIC_URL}/${customizedPizza.img}`;
-
   return (
-    <div>
+    <div style={{ margin: 0, padding: 0 }}>
       <NavBar />
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', marginTop: "2rem"}}>
-        {/* Single Card */}
-        <Card style={{ maxWidth: 350, marginBottom: '1rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: "2rem" }}>
+       
+        <Card style={{ maxWidth: 400, marginBottom: '1rem',  border: 'none'}}>
           <CardMedia
             component="img"
             alt={customizedPizza.name}
-            style={{ width: '100%', objectFit: 'cover' }}
-            image={imagePath}
+            style={{ width: '100%',objectFit: 'cover' }}
+            image={customizedPizza.img}
           />
-          <CardContent style={{ boxSizing: 'border-box', width: '100%', paddingTop: 16 }}>
+          <CardContent style={{ boxSizing: 'border-box', width: '100%', paddingTop: 8 }}>
             <Typography variant="h4" fontWeight={600}>{customizedPizza.name}</Typography>
-            <Typography variant="body2" style={{ paddingBottom: 8, marginTop: 8 }}>{customizedPizza.description}</Typography>
-            <Typography variant="body2" style={{ paddingBottom: 8 }}>
-              Base: {customizedPizza.base}, Sauce: {customizedPizza.sauce}, Cheese:{' '}
-              {customizedPizza.cheese}, Veggie: {customizedPizza.veggie}
-            </Typography>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: "center" }}>
+            <Typography variant="body2" style={{ paddingBottom: 5 }}>{customizedPizza.description}</Typography>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: "center" , marginTop: "3px"}}>
               <Typography variant="body2" fontWeight={550} fontSize={20}>
                 &#8377;{customizedPizza.price}
               </Typography>

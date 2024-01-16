@@ -6,7 +6,6 @@ import sendResetMail from "../utils/sendResetMail.js";
 
 const router = express.Router();
 
-
 router.post("/register", async (req, res) => {
   try {
     // Check if required fields are provided

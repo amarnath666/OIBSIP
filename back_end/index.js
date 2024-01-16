@@ -10,7 +10,7 @@ import { dirname } from "path";
 import authControllers from "./controllers/auth.js";
 import pizzaVarieties from "./init/data.js";
 import { baseOptions, sauceOptions, cheeseOptions, veggieOptions } from "./init/customPizza.js";
-
+import requireAuth from "./middleware/middleware.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
