@@ -94,7 +94,7 @@ const PizzaOptions = () => {
   const customizedPizza = () => {
     if (selectedOptions.base && selectedOptions.sauce && selectedOptions.cheese && selectedOptions.veggie) {
       if (isAuthenticated) {
-        navigate("customizedPizza", {
+        navigate("/customizedPizza", {
           state: {
             selectedOptions,
             baseOptions, 
@@ -111,6 +111,13 @@ const PizzaOptions = () => {
     }
   };
 
+   // Conditionally render based on authentication status
+   if (!isAuthenticated) {
+    // User is not logged in, you can display a message or return null
+    return (
+      <h1>Please Login!</h1>
+    );
+  }
   
     return (
       <div style={{ textAlign: 'center' }}>

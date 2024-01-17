@@ -3,11 +3,11 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import session from "express-session"; // Import express-session
+import session from "express-session"; 
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import authControllers from "./controllers/auth.js";
+import authRoutes from "./routes/auth.js";
 import pizzaVarieties from "./init/data.js";
 import { baseOptions, sauceOptions, cheeseOptions, veggieOptions } from "./init/customPizza.js";
 import requireAuth from "./middleware/middleware.js";
@@ -19,7 +19,10 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 
 /* SESSION SETUP */
 app.use(
@@ -35,7 +38,7 @@ app.use(
 );
 
 /* ROUTES */
-app.use("/auth", authControllers);
+app.use("/auth", authRoutes);
 
 app.get("/pizza-varieties", (req, res) => {
   res.json(pizzaVarieties);
@@ -51,6 +54,7 @@ app.get("/custom-pizza", (req, res) => {
 
   res.json(customPizza);
 });
+
 
 /* MONGOOSE SETUP */
 mongoose.connect(process.env.MONGODB_URL);

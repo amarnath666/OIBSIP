@@ -1,4 +1,6 @@
 const requireAuth = (req, res, next) => {
+    console.log('Session:', req.session);
+    
     if (req.session && req.session.isAuthenticated) {
         next();
     } else {

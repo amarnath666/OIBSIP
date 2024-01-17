@@ -45,6 +45,10 @@ const NavBar = () => {
         }
     };
 
+    if(!isAuthenticated) {
+        return null;
+    }
+
     return (
         <AppBar position="sticky">
             <Toolbar>

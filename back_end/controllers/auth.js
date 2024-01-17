@@ -1,18 +1,17 @@
-import bcrypt from  "bcrypt";
+import bcrypt from "bcrypt";
 import User from "../models/User.js";
-import express from "express";
 import verifyMail from "../utils/verifyMail.js";
 import sendResetMail from "../utils/sendResetMail.js";
 
-const router = express.Router();
-
-router.post("/register", async (req, res) => {
+// Register a new user
+export const register = async (req, res) => {
   try {
     // Check if required fields are provided
     if (!req.body.name || !req.body.location || !req.body.email || !req.body.password) {
       return res.status(400).send("Name, location, email, and password are required");
     }
 
+    // Check if the user with the given email already exists
     let user = await User.findOne({ email: req.body.email });
 
     if (user) {
@@ -49,10 +48,10 @@ router.post("/register", async (req, res) => {
 
     res.status(500).json({ error: "Internal Server Error" });
   }
-});
+};
 
-
-router.post('/confirm-otp', async (req, res) => {
+// Confirm OTP for user verification
+export const confirmOtp = async (req, res) => {
   const { email, enteredOTP } = req.body;
 
   try {
@@ -64,6 +63,7 @@ router.post('/confirm-otp', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    // Log OTP-related details for debugging
     console.log('Stored OTP:', user.otp);
     console.log('Entered OTP:', enteredOTP);
     console.log('OTP Expiration:', user.otpExpiration);
@@ -84,9 +84,10 @@ router.post('/confirm-otp', async (req, res) => {
     console.error('OTP verification error:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
-});
+};
 
-router.post("/login", async (req, res) => {
+// User login
+export const login = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
 
@@ -109,93 +110,94 @@ router.post("/login", async (req, res) => {
     console.error("Login error:", error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
-});
+};
 
-
-router.post("/forgot-password", async (req, res) => {
+// User forgot password
+export const forgotPassword = async (req, res) => {
   try {
-      const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email });
 
-      if (!user) {
-          return res.status(404).json({ error: "User not found" });
-      }
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-      // Generate reset OTP and set expiration time
-      const resetOTP = Math.floor(100000 + Math.random() * 900000).toString();
-      user.resetOTP = resetOTP;
-      user.resetOTPExpiration = Date.now() + 3600000; // 1 hour
+    // Generate reset OTP and set expiration time
+    const resetOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    user.resetOTP = resetOTP;
+    user.resetOTPExpiration = Date.now() + 3600000; // 1 hour
 
-      await user.save();
+    await user.save();
 
-      // Send reset email with the OTP
-      await sendResetMail(user.email, resetOTP);
+    // Send reset email with the OTP
+    await sendResetMail(user.email, resetOTP);
 
-      return res.status(200).json({
-          message: "Password reset OTP sent. Check your mail.",
-      });
+    return res.status(200).json({
+      message: "Password reset OTP sent. Check your mail.",
+    });
   } catch (error) {
-      console.error("Forgot password error:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
+    console.error("Forgot password error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
-});
+};
 
-// Assuming you have this structure in your /reset-password route
-router.post("/reset-password", async (req, res) => {
+// User reset password after receiving OTP
+export const resetPassword = async (req, res) => {
   try {
-      const { email, resetOTP, password } = req.body;
-      const user = await User.findOne({
-          email,
-          resetOTP,
-          resetOTPExpiration: { $gt: Date.now() },
-      });
+    const { email, resetOTP, password } = req.body;
+    const user = await User.findOne({
+      email,
+      resetOTP,
+      resetOTPExpiration: { $gt: Date.now() },
+    });
 
+    // Log user found in the database
+    console.log('User found in the database:', user);
 
-      // Log user found in the database
-      console.log('User found in the database:', user);
+    if (!user) {
+      return res.status(400).json({ error: "Invalid or expired OTP" });
+    }
 
-      if (!user) {
-          return res.status(400).json({ error: "Invalid or expired OTP" });
-      }
+    // Log current time and OTP Expiration from the user
+    console.log('Current time:', Date.now());
+    console.log('OTP Expiration from the user:', user.resetOTPExpiration);
 
-      // Log current time and OTP Expiration from the user
-      console.log('Current time:', Date.now());
-      console.log('OTP Expiration from the user:', user.resetOTPExpiration);
+    // Reset password
+    user.password = await bcrypt.hash(password, 10);
+    user.resetOTP = undefined;
+    user.resetOTPExpiration = undefined;
 
-      // Reset password
-      user.password = await bcrypt.hash(password, 10);
-      user.resetOTP = undefined;
-      user.resetOTPExpiration = undefined;
+    await user.save();
 
-      await user.save();
-
-      return res.status(200).json({ message: "Password reset successfully" });
+    return res.status(200).json({ message: "Password reset successfully" });
   } catch (error) {
-      console.error("Reset password error:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
+    console.error("Reset password error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
-});
+};
 
-router.post("/admin-login", async (req, res) => {
+// Admin login
+export const adminLogin = async (req, res) => {
   const adminCredentials = {
     email: process.env.ADMIN_EMAIL,
     password: process.env.ADMIN_PASSWORD,
-};
+  };
 
   try {
     const { email, password } = req.body;
 
-      if (email === adminCredentials.email && password === adminCredentials.password) {
-          return res.status(200).json({ message: 'Admin login successful' });
-      } else {
-          return res.status(401).json({ error: 'Invalid credentials' });
-      }
+    if (email === adminCredentials.email && password === adminCredentials.password) {
+      return res.status(200).json({ message: 'Admin login successful' });
+    } else {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
   } catch (error) {
-      console.error('Admin login error:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Admin login error:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
-});
+};
 
-router.post("/logout", (req, res) => {
+// User logout
+export const logout = (req, res) => {
   try {
     if (req.session) {
       req.session.destroy(); // Destroy the session
@@ -205,7 +207,4 @@ router.post("/logout", (req, res) => {
     console.error("Logout error:", error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
-});
-
-export default router;
-
+};

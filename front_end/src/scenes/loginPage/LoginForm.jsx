@@ -30,7 +30,7 @@ const LoginForm = () => {
       if (response.status === 200) {
         dispatch(login());
         
-        navigate("/");
+        navigate("/home");
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -76,6 +76,9 @@ const LoginForm = () => {
           {loginError && <Typography color="error" style={{ marginTop: '10px' }}>{loginError}</Typography>}
           <Typography variant="body2" style={{ marginTop: '10px' }}>
             <Link to="/forgot-password">Forgot Password?</Link>
+          </Typography>
+          <Typography variant="body2" style={{ marginTop: '10px' }}>
+            <Link to="/register">Don't have an account? Sign Up here.</Link>
           </Typography>
         </Paper>
       </Grid>
