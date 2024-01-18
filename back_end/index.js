@@ -10,6 +10,7 @@ import { dirname } from "path";
 import authRoutes from "./routes/auth.js";
 import pizzaVarieties from "./init/data.js";
 import { baseOptions, sauceOptions, cheeseOptions, veggieOptions } from "./init/customPizza.js";
+import paymentRoutes from "./routes/payment.js";
 import requireAuth from "./middleware/middleware.js";
 
 /* CONFIGURATIONS */
@@ -37,8 +38,11 @@ app.use(
   })
 );
 
+
+
 /* ROUTES */
 app.use("/auth", authRoutes);
+app.use("/payment", paymentRoutes);
 
 app.get("/pizza-varieties", (req, res) => {
   res.json(pizzaVarieties);
