@@ -15,7 +15,8 @@ const PizzaCard = ({ pizza }) => {
       });
 
       const order = await response.json();
-
+      console.log("Razorpay Order Response:", order);
+      
       const options = {
         amount: pizza.price * 100, // Razorpay expects the amount in paise
         currency: "INR",
@@ -28,8 +29,13 @@ const PizzaCard = ({ pizza }) => {
         },
       };
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
+      if (window.Razorpay) {
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+    } else {
+        console.error("Razorpay script not loaded");
+    }
+  
     } catch (error) {
       console.error("Error:", error);
     }

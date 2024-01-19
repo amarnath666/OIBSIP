@@ -45,10 +45,6 @@ const NavBar = () => {
         }
     };
 
-    if(!isAuthenticated) {
-        return null;
-    }
-
     return (
         <AppBar position="sticky">
             <Toolbar>
@@ -80,7 +76,7 @@ const NavBar = () => {
             <ListItem Button component={Link} to="/register" onClick={handleDrawerToggle}>
                 <ListItemText primary="Register" />
             </ListItem>
-            <ListItem Button component={Link} to="/login" onClick={handleDrawerToggle}>
+            <ListItem Button component={Link} to="/" onClick={handleDrawerToggle}>
                 <ListItemText primary="User login" />
             </ListItem>
             <ListItem Button component={Link} to="/admin-login" onClick={handleDrawerToggle}>
@@ -113,7 +109,7 @@ const NavBar = () => {
                             <Button color="inherit" component={Link} to="/register">
                                     Register
                                 </Button>
-                                <Button color="inherit" component={Link} to="/login">
+                                <Button color="inherit" component={Link} to="/">
                                     User login
                                 </Button>
                                 <Button color="inherit" component={Link} to="/admin-login">

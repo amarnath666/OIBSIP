@@ -5,6 +5,7 @@ import { Grid, Paper, Typography, TextField, Button } from '@mui/material';
 import { setAdmin } from 'scenes/state/authSlice';
 import { login } from 'scenes/state/authSlice';
 import { useDispatch } from 'react-redux';
+import NavBar from 'scenes/homePage/Navbar';
 
 const AdminLogin = () => {
     const navigate = useNavigate();
@@ -42,6 +43,8 @@ const AdminLogin = () => {
     };
 
     return (
+      <div>
+        <NavBar />
         <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
       <Grid item xs={10} sm={8} md={6} lg={4}>
         <Paper elevation={3} style={{ padding: '20px' }}>
@@ -75,6 +78,8 @@ const AdminLogin = () => {
         </Paper>
       </Grid>
     </Grid>
+      </div>
+        
   );
 };
 

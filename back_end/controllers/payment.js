@@ -17,7 +17,7 @@ export const createOrder = async (req, res) => {
     };
 
     const options = {
-        amount: 100, // amount in paise 
+        amount: 1000, // amount in paise 
         currency: "INR",
         receipt: generateUniqueReceiptId(), // Using uuid to generate a unique ID
         payment_capture: 1, // Auto capture payment

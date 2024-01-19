@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { Grid, Paper, Typography, TextField, Button } from '@mui/material';
 import { useNavigate } from 'react-router';
+import NavBar from 'scenes/homePage/Navbar';
 
 const ResetPassword = () => {
     const navigate = useNavigate();
@@ -42,7 +43,9 @@ const ResetPassword = () => {
   };
 
   return (
-    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
+    <div>
+      <NavBar />
+      <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
       <Grid item xs={10} sm={8} md={6} lg={4}>
         <Paper elevation={3} style={{ padding: '20px' }}>
           <Typography variant="h5" gutterBottom>
@@ -85,6 +88,8 @@ const ResetPassword = () => {
         </Paper>
       </Grid>
     </Grid>
+    </div>
+    
   );
 };
 

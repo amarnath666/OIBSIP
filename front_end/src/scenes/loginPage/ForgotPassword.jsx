@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Grid, Paper, Typography, TextField, Button, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import NavBar from 'scenes/homePage/Navbar';
 
 const ForgotPasswordForm = () => {
     const navigate = useNavigate();
@@ -42,7 +43,9 @@ const ForgotPasswordForm = () => {
     };
 
     return (
-        <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
+        <div>
+            <NavBar />
+            <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
             <Grid item xs={10} sm={8} md={6} lg={4}>
                 <Paper elevation={3} style={{ padding: '20px' }}>
                     <Typography variant="h5" gutterBottom>
@@ -80,6 +83,8 @@ const ForgotPasswordForm = () => {
                 </Paper>
             </Grid>
         </Grid>
+        </div>
+        
     );
 };
 

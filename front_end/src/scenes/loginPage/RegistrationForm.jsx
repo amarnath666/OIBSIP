@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { TextField, Button, Grid, Typography, Paper, CircularProgress } from '@mui/material';
 import axios from 'axios';
+import NavBar from 'scenes/homePage/Navbar';
 
 const RegistrationForm = () => {
   const navigate = useNavigate(); 
@@ -44,7 +45,9 @@ const RegistrationForm = () => {
   };
 
   return (
-    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
+    <div >
+      <NavBar />
+      <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
       <Grid item xs={10} sm={8} md={6} lg={4}>
         <Paper elevation={3} style={{ padding: '20px' }}>
           <Typography variant="h5" gutterBottom>
@@ -69,6 +72,8 @@ const RegistrationForm = () => {
         </Paper>
       </Grid>
     </Grid>
+    </div>
+   
   );
 };
 
