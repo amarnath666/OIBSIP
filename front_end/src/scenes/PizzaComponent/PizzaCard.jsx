@@ -4,42 +4,49 @@ import { Card, CardContent, CardMedia, Typography, Button, Box } from '@mui/mate
 const PizzaCard = ({ pizza }) => {
   const handleBuyNowClick = async () => {
     try {
-      const response = await fetch("http://localhost:3001/payment/create-order", {
+      const response = await fetch("http://localhost:3001/payment/checkout", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
         },
+        // Adjust the request body as needed
         body: JSON.stringify({
-          // No need for these values here
+          amount: pizza.price,
+          // include other necessary details here
         }),
       });
-
+  
       const order = await response.json();
       console.log("Razorpay Order Response:", order);
-      
+  
       const options = {
+        key: 'rzp_test_ciEkAemCSllnO9', 
         amount: pizza.price * 100, // Razorpay expects the amount in paise
         currency: "INR",
         name: "Pizzify",
         description: pizza.description,
-        order_id: order.id,
+        order_id: order.id,  // Use order.order.id instead of order.id
+        callback_url: "http://localhost:3001/payment/paymentverification",
         handler: function (response) {
           console.log(response);
-          // Handle successful payment response here
+          const { razorpay_payment_id: reference } = response;
+          // window.location.href = `/paymentsuccess?reference=${reference}`;
         },
       };
 
+      
+  
       if (window.Razorpay) {
         const rzp = new window.Razorpay(options);
         rzp.open();
-    } else {
+      } else {
         console.error("Razorpay script not loaded");
-    }
-  
+      }
     } catch (error) {
       console.error("Error:", error);
     }
   };
+  
 
   return (
     <Card sx={{ marginTop: "0.2rem" }}>

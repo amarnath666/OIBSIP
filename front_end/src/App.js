@@ -10,6 +10,7 @@ import AdminLogin from 'scenes/loginPage/AdminLogin';
 import Home from 'scenes/homePage/Home';
 import Admin from 'scenes/AdminPage/Admin';
 import CustomizedPizza from 'scenes/CustomPizza/CustomizedPizza';
+import PaymentSuccess from 'scenes/PizzaComponent/PaymentSuccess';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
       <Route path="/home" element={<Home />} />
       <Route path="/admin" element={<Admin />} />
       <Route path='/customizedPizza' element={<CustomizedPizza />} />
+      <Route path="/paymentsuccess" element={<PaymentSuccess />} />
     </Routes>
   );
 };
