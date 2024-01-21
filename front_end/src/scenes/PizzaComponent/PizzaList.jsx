@@ -32,12 +32,6 @@ const PizzaList = () => {
     fetchData();
   }, [dispatch, isAuthenticated]);
 
-  // Conditionally render based on authentication status
-  if (!isAuthenticated) {
-    // User is not logged in, you can display a message or return null
-    return null;
-  }
-
   // User is logged in, render the pizza list
   return (
     <Box display="flex" flexWrap="wrap" justifyContent="space-evenly" marginTop="1.3rem">

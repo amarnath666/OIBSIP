@@ -13,6 +13,8 @@ import CustomizedPizza from 'scenes/CustomPizza/CustomizedPizza';
 import PaymentSuccess from 'scenes/PizzaComponent/PaymentSuccess';
 
 const App = () => {
+  // const loggedIn = window.localStorage.getItem("isLoggedIn");
+  // console.log(loggedIn, "login");
   return (
     <Routes>
       <Route path="/register" element={<RegistrationForm />} />
@@ -20,7 +22,8 @@ const App = () => {
       <Route path="/admin-login" element={<AdminLogin />} />
       <Route path="/forgot-password" element={<ForgotPasswordForm />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/" element={<LoginForm />} />
+      <Route path="/" element={ <LoginForm />} />
+      {/* <Route path="/" element={loggedIn ? <Home /> : <LoginForm />} /> */}
       <Route path="/home" element={<Home />} />
       <Route path="/admin" element={<Admin />} />
       <Route path='/customizedPizza' element={<CustomizedPizza />} />

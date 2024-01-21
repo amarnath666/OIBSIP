@@ -26,8 +26,9 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3001/auth/login', formData);
-
+      const response = await axios.post('http://localhost:3001/auth/login', formData, { withCredentials: true });
+      window.localStorage.setItem("isLoggedIn", true);
+      
       if (response.status === 200) {
         dispatch(login());
         

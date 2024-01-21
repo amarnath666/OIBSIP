@@ -24,8 +24,18 @@ const PizzaOptions = () => {
   useEffect(() => {
     const fetchOptions = async () => {
       try {
-        const options = await dispatch(fetchPizzaOptions());
-        dispatch(setPizzaOptions(options));
+        // Check if options are already in local storage
+        const storedOptions = localStorage.getItem('pizzaOptions');
+        if (storedOptions) {
+          const options = JSON.parse(storedOptions);
+          dispatch(setPizzaOptions(options));
+        } else {
+          const options = await dispatch(fetchPizzaOptions());
+          dispatch(setPizzaOptions(options));
+
+          // Save options to local storage
+          localStorage.setItem('pizzaOptions', JSON.stringify(options));
+        }
       } catch (error) {
         console.error('Error fetching pizza options:', error);
       }
@@ -55,7 +65,15 @@ const PizzaOptions = () => {
       default:
         break;
     }
-  };
+  
+    // Store selected options in local storage
+    const updatedOptions = {
+      ...selectedOptions,
+      [optionType]: option,
+    };
+    localStorage.setItem('selectedOptions', JSON.stringify(updatedOptions));
+  }; 
+
 
   const renderOptions = (options, optionType, selectedOption, categoryText) => (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: "0.5rem"}}>

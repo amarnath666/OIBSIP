@@ -4,37 +4,51 @@ import { Card, CardContent, CardMedia, Typography, Button, Box } from '@mui/mate
 const PizzaCard = ({ pizza }) => {
   const handleBuyNowClick = async () => {
     try {
-      const response = await fetch("http://localhost:3001/payment/checkout", {
+      const response = await fetch("http://localhost:3001/payment/check-out", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
         },
-        // Adjust the request body as needed
         body: JSON.stringify({
-          amount: pizza.price,
+          amount: pizza.price,  // Include the amount in the request body
           // include other necessary details here
         }),
       });
-  
+ 
       const order = await response.json();
       console.log("Razorpay Order Response:", order);
   
       const options = {
-        key: 'rzp_test_ciEkAemCSllnO9', 
-        amount: pizza.price * 100, // Razorpay expects the amount in paise
+        key: 'rzp_test_ciEkAemCSllnO9',
         currency: "INR",
         name: "Pizzify",
         description: pizza.description,
-        order_id: order.id,  // Use order.order.id instead of order.id
-        callback_url: "http://localhost:3001/payment/paymentverification",
-        handler: function (response) {
+        image:`${process.env.PUBLIC_URL}/${pizza.img}`,
+        order_id: order.order.id,
+        handler: async function (response) {
           console.log(response);
-          const { razorpay_payment_id: reference } = response;
-          // window.location.href = `/paymentsuccess?reference=${reference}`;
+          const { razorpay_payment_id: reference, razorpay_signature } = response;
+          window.location.href = `/paymentsuccess?reference=${reference}`;
+
+          // Manually trigger payment verification
+          const verificationResponse = await fetch("http://localhost:3001/payment/payment-verification", {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              razorpay_order_id: order.order.id,
+              razorpay_payment_id: reference,
+              razorpay_signature: razorpay_signature,
+            }),
+          });
+  
+          const verificationResult = await verificationResponse.json();
+          console.log("Payment Verification Response:", verificationResult);
+  
+          // Handle the result as needed
         },
       };
-
-      
   
       if (window.Razorpay) {
         const rzp = new window.Razorpay(options);

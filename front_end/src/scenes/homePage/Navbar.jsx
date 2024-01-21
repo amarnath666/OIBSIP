@@ -31,7 +31,8 @@ const NavBar = () => {
                     "Content-Type": "application/json",
                 }
             });
-
+            window.localStorage.removeItem("isLoggedIN");
+            
             if (response.ok) {
                 dispatch(logout());
                 navigate("/");

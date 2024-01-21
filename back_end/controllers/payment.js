@@ -2,7 +2,7 @@ import crypto from "crypto";
 import Payment from "../models/Payment.js";
 import Razorpay from "razorpay";
 
-export const checkout = async (req, res) => {
+export const checkOut = async (req, res) => {
   try {
     const instance = new Razorpay({
       key_id: process.env.KEY_ID,
@@ -28,7 +28,6 @@ export const checkout = async (req, res) => {
     });
   }
 };
-
 
 export const paymentVerification = async (req, res) => {
   try {
