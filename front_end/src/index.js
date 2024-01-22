@@ -1,13 +1,13 @@
 // index.js
+
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { configureStore } from '@reduxjs/toolkit';
-import authSlice from 'scenes/state/authSlice';
+import { PersistGate } from 'redux-persist/integration/react'; // Import PersistGate
+import { store, persistor } from 'scenes/state/store'; // Import store and persistor
 import './index.css';
 import App from './App';
-import store from 'scenes/state/store';
 
 const root = createRoot(document.getElementById('root'));
 
@@ -15,10 +15,11 @@ const render = () => {
   root.render(
     <React.StrictMode>
       <Provider store={store}>
-        <Router>
-          {/* Now, the App component is wrapped with Router */}
-          <App />
-        </Router>
+        <PersistGate loading={null} persistor={persistor}>
+          <Router>
+            <App />
+          </Router>
+        </PersistGate>
       </Provider>
     </React.StrictMode>
   );

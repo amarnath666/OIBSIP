@@ -58,6 +58,63 @@ const customizedPizza = allPizzas.find(
     pizza.veggie === veggie.name
 );
 
+const handleBuyNowClickCustomized = async () => {
+  try {
+    const response = await fetch("http://localhost:3001/payment/check-out", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amount: customizedPizza.price,          
+      }),
+    });
+
+    const order = await response.json();
+    console.log("Razorpay Order Response:", order);
+
+    const options = {
+      key: 'rzp_test_ciEkAemCSllnO9',
+      currency: "INR",
+      name: "Pizzify",
+      image: baseImages[base.name],
+      order_id: order.order.id,
+      handler: async function (response) {
+        console.log(response);
+        const { razorpay_payment_id: reference, razorpay_signature } = response;
+        window.location.href = `/paymentsuccess?reference=${reference}`;
+
+        // Manually trigger payment verification
+        const verificationResponse = await fetch("http://localhost:3001/payment/payment-verification", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            razorpay_order_id: order.order.id,
+            razorpay_payment_id: reference,
+            razorpay_signature: razorpay_signature,
+          }),
+        });
+
+        const verificationResult = await verificationResponse.json();
+        console.log("Payment Verification Response:", verificationResult);
+
+        // Handle the result as needed
+      },
+    };
+
+    if (window.Razorpay) {
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } else {
+      console.error("Razorpay script not loaded");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
   if (!customizedPizza) {
     return (
       <div style={{ textAlign: 'center', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -87,7 +144,7 @@ const customizedPizza = allPizzas.find(
               <Typography variant="body2" fontWeight={550} fontSize={20}>
                 &#8377;{customizedPizza.price}
               </Typography>
-              <Button variant="contained" color="primary" style={{ width: '100%', maxWidth: '45%', fontWeight: "500" }}>
+              <Button variant="contained" color="primary" style={{ width: '100%', maxWidth: '45%', fontWeight: "500" }} onClick={handleBuyNowClickCustomized}>
                 Buy Now
               </Button>
             </div>

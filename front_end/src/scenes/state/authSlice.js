@@ -64,7 +64,8 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchPizzaOptions.fulfilled, (state, action) => {
+    builder
+    .addCase(fetchPizzaOptions.fulfilled, (state, action) => {
       state.baseOptions = action.payload.baseOptions;
       state.sauceOptions = action.payload.sauceOptions;
       state.cheeseOptions = action.payload.cheeseOptions;

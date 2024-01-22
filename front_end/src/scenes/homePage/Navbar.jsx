@@ -29,9 +29,10 @@ const NavBar = () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                }
+                },
+                credentials: 'include', 
             });
-            window.localStorage.removeItem("isLoggedIN");
+            
             
             if (response.ok) {
                 dispatch(logout());

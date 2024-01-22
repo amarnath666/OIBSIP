@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import Payment from "../models/Payment.js";
 import Razorpay from "razorpay";
+import User from "../models/User.js";
 
 export const checkOut = async (req, res) => {
   try {
@@ -50,7 +51,6 @@ export const paymentVerification = async (req, res) => {
     const isAuthentic = expectedSignature === razorpay_signature;
 
     if (isAuthentic) {
-      // Database operation comes here
       try {
         const paymentData = {
           razorpay_order_id,
@@ -58,9 +58,21 @@ export const paymentVerification = async (req, res) => {
           razorpay_signature,
         };
 
-        const newPayment = await Payment.create(paymentData);
+        if (!req.isAuthenticated()) {
+          return res.status(401).json({ success: false, error: 'User not authenticated' });
+        }
+        // Assuming you have a user object available in the request (e.g., req.user)
+        const userId = req.user._id; // Adjust this according to your actual user object structure
+        console.log('User ID:', userId);
 
-        console.log("Payment data stored successfully:", newPayment);
+        // Update the user's document in the database with the new order ID
+        const updatedUser = await User.findByIdAndUpdate(
+          userId,
+          { $push: { orders: razorpay_order_id } },
+          { new: true }
+        );
+
+        console.log("User document updated with order ID:", updatedUser);
 
         res.status(200).json({ success: true, reference: razorpay_payment_id });
       } catch (dbError) {

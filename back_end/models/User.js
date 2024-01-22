@@ -33,7 +33,11 @@ const userSchema = mongoose.Schema({
     },
     resetOTPExpiration: {
         type: Date
-    }
+    },
+    orders: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Payment",
+      }],
 },  { timestamps: true }
 );
 

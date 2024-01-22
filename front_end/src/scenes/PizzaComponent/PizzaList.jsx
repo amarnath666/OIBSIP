@@ -16,9 +16,7 @@ const PizzaList = () => {
         // Check if the user is authenticated before making the request
         if (isAuthenticated) {
           // Fetch pizza varieties data from the server
-          const response = await fetch("http://localhost:3001/pizza-varieties", {
-            credentials: "include",
-          });
+          const response = await fetch("http://localhost:3001/pizza-varieties");
           const data = await response.json();
 
           // Set the pizza varieties in the Redux store
@@ -31,6 +29,10 @@ const PizzaList = () => {
 
     fetchData();
   }, [dispatch, isAuthenticated]);
+  
+  if(!isAuthenticated) {
+    return null;
+  }
 
   // User is logged in, render the pizza list
   return (

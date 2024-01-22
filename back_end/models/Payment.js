@@ -12,7 +12,7 @@ const paymentSchema = new mongoose.Schema({
   razorpay_signature: {
     type: String,
     required: true,
-  },
+  }
 });
 
 const Payment = mongoose.model("Payment", paymentSchema);
