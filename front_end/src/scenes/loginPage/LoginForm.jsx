@@ -1,16 +1,17 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Grid, Paper, Typography, TextField, Button } from '@mui/material';
-import { login, setAdmin } from 'scenes/state/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { login, setToken } from 'scenes/state/authSlice';
 import NavBar from 'scenes/homePage/Navbar';
+import { Link, useNavigate } from 'react-router-dom';
+
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
+  const authToken  = useSelector((state) => state.auth.token); 
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -26,13 +27,17 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3001/auth/login', formData, { withCredentials: true });
-      
-      
+      const response = await axios.post('http://localhost:3001/auth/login', formData);
+
       if (response.status === 200) {
+        const { token } = response.data;
+        console.log('Authentication Token:', token);
+
         dispatch(login());
-        
+        dispatch(setToken(token));
+
         navigate("/home");
+       
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -47,48 +52,47 @@ const LoginForm = () => {
 
   return (
     <Grid>
-       <NavBar />
-    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
-      <Grid item xs={10} sm={8} md={6} lg={4}>
-        <Paper elevation={3} style={{ padding: '20px' }}>
-          <Typography variant="h5" gutterBottom>
-            Login
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              type="email"
-              label="Email"
-              name="email"
-              onChange={handleChange}
-              margin="normal"
-              required
-            />
-            <TextField
-              fullWidth
-              type="password"
-              label="Password"
-              name="password"
-              onChange={handleChange}
-              margin="normal"
-              required
-            />
-            <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
+      <NavBar />
+      <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
+        <Grid item xs={10} sm={8} md={6} lg={4}>
+          <Paper elevation={3} style={{ padding: '20px' }}>
+            <Typography variant="h5" gutterBottom>
               Login
-            </Button>
-          </form>
-          {loginError && <Typography color="error" style={{ marginTop: '10px' }}>{loginError}</Typography>}
-          <Typography variant="body2" style={{ marginTop: '10px' }}>
-            <Link to="/forgot-password">Forgot Password?</Link>
-          </Typography>
-          <Typography variant="body2" style={{ marginTop: '10px' }}>
-            <Link to="/register">Don't have an account? Sign Up here.</Link>
-          </Typography>
-        </Paper>
+            </Typography>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                fullWidth
+                type="email"
+                label="Email"
+                name="email"
+                onChange={handleChange}
+                margin="normal"
+                required
+              />
+              <TextField
+                fullWidth
+                type="password"
+                label="Password"
+                name="password"
+                onChange={handleChange}
+                margin="normal"
+                required
+              />
+              <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
+                Login
+              </Button>
+            </form>
+            {loginError && <Typography color="error" style={{ marginTop: '10px' }}>{loginError}</Typography>}
+            <Typography variant="body2" style={{ marginTop: '10px' }}>
+              <Link to="/forgot-password">Forgot Password?</Link>
+            </Typography>
+            <Typography variant="body2" style={{ marginTop: '10px' }}>
+              <Link to="/register">Don't have an account? Sign Up here.</Link>
+            </Typography>
+          </Paper>
+        </Grid>
       </Grid>
     </Grid>
-    </Grid>
-   
   );
 };
 

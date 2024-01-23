@@ -20,6 +20,7 @@ export const fetchPizzaOptions = createAsyncThunk(
 const initialState = {
   isAuthenticated: false,
   isAdmin: false,
+  token: null,
   pizzaVarieties: [],
   baseOptions: [],
   sauceOptions: [],
@@ -37,12 +38,14 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    login: (state) => {
+    login: (state, action) => {
       state.isAuthenticated = true;
+      state.token = action.payload; //
     },
     logout: (state) => {
       state.isAuthenticated = false;
       state.isAdmin = false;
+      state.token = null;
     },
     setAdmin: (state) => {
       state.isAdmin = true;
@@ -61,6 +64,9 @@ const authSlice = createSlice({
     },
     setVeggie: (state, action) => {
       state.selectedOptions.veggie = action.payload;
+    },
+    setToken: (state, action) => {
+      state.token = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -83,6 +89,7 @@ export const {
   setCheese,
   setSauce,
   setVeggie,
+  setToken,
 } = authSlice.actions;
 export default authSlice.reducer;
 

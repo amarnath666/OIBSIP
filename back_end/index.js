@@ -34,43 +34,43 @@ app.use(
 );
 
 /* SESSION SETUP */
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      secure: false,
-      maxAge: 1000 * 60 * 60 * 24,
-    },
-  })
-);
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: {
+//       secure: false,
+//       maxAge: 1000 * 60 * 60 * 24,
+//     },
+//   })
+// );
 
-/* Passport initialization and configuration */
-app.use(passport.initialize());
-app.use(passport.session());
+// /* Passport initialization and configuration */
+// app.use(passport.initialize());
+// app.use(passport.session());
 
-passport.serializeUser((user, done) => {
-  console.log('Serializing user:', user);
-  done(null, user.id);
-});
+// passport.serializeUser((user, done) => {
+//   console.log('Serializing user:', user);
+//   done(null, user.id);
+// });
 
-passport.deserializeUser((id, done) => {
-  console.log('Deserializing user ID:', id);
-  User.findById(id)
-    .then(user => {
-      if (!user) {
-        console.log('User not found with ID:', id);
-        return done(null, null);
-      }
-      console.log('User found:', user);
-      done(null, user);
-    })
-    .catch(err => {
-      console.error('Error finding user by ID:', err);
-      done(err, null);
-    });
-});
+// passport.deserializeUser((id, done) => {
+//   console.log('Deserializing user ID:', id);
+//   User.findById(id)
+//     .then(user => {
+//       if (!user) {
+//         console.log('User not found with ID:', id);
+//         return done(null, null);
+//       }
+//       console.log('User found:', user);
+//       done(null, user);
+//     })
+//     .catch(err => {
+//       console.error('Error finding user by ID:', err);
+//       done(err, null);
+//     });
+// });
 
 
 passport.use(new LocalStrategy(
@@ -96,6 +96,7 @@ passport.use(new LocalStrategy(
     }
   }
 ));
+
 
 /* ROUTES */
 app.use("/auth", authRoutes);

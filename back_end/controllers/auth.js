@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import verifyMail from "../utils/verifyMail.js";
 import sendResetMail from "../utils/sendResetMail.js";
+import generateToken from "../utils/jwtUtils.js";
 
 // Register a new user
 export const register = async (req, res) => {
@@ -50,6 +51,8 @@ export const register = async (req, res) => {
   }
 };
 
+// controllers/authController.js
+
 // Confirm OTP for user verification
 export const confirmOtp = async (req, res) => {
   const { email, enteredOTP } = req.body;
@@ -74,8 +77,8 @@ export const confirmOtp = async (req, res) => {
       user.verified = true;
       await user.save();
 
-      // Respond with a success message
-      return res.status(200).json({ message: 'OTP verified successfully' });
+      const token = generateToken(user._id, user.role);
+      return res.status(200).json({ token, message: 'OTP verified successfully' });
     } else {
       // Respond with an error message
       return res.status(401).json({ error: 'Invalid or expired OTP' });
@@ -86,31 +89,37 @@ export const confirmOtp = async (req, res) => {
   }
 };
 
+
 // User login
-export const login = async (req, res) => {
+
+export const login = async (email, password) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return { error: "User not found" };
     }
 
     if (!user.verified) {
-      return res.status(401).json({ error: "Email not verified. Please check your email for verification." });
+      return { error: "Email not verified. Please check your email for verification." };
     }
 
-    const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (isPasswordValid) {
-      return res.json({ message: "Login successful!" });
+      const token = generateToken(user._id, user.role);
+      return { token, message: "Login successful!" };
     }
 
-    return res.status(401).send("Invalid Password");
+    return { error: "Invalid Password" };
   } catch (error) {
     console.error("Login error:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return { error: "Internal Server Error" };
   }
 };
+
+// ... (other controller functions)
+
 
 // User forgot password
 export const forgotPassword = async (req, res) => {

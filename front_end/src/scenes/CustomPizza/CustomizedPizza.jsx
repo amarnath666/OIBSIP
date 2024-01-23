@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { Typography, Card, CardContent, CardMedia, Button } from '@mui/material';
 import NavBar from "scenes/homePage/Navbar";
 
 const CustomizedPizza = () => {
   const { baseOptions, sauceOptions, cheeseOptions, veggieOptions, selectedOptions } = useSelector(state => state.auth);
-
   const { base, sauce, cheese, veggie } = selectedOptions;
+  const [isTokenFetched, setIsTokenFetched] = useState(false);
+  const authToken = useSelector((state) => state.auth.token);
+
+  useEffect(() => {
+    // Check if the authToken is available and set isTokenFetched to true accordingly
+    if (authToken) {
+      setIsTokenFetched(true);
+      console.log('Auth Token Fetched:', authToken);
+    }
+  }, [authToken, setIsTokenFetched]);
+
 
 // URL for each type of pizza base
 const baseImages = {
@@ -60,6 +70,15 @@ const customizedPizza = allPizzas.find(
 
 const handleBuyNowClickCustomized = async () => {
   try {
+      console.log('Buy Now button clicked');
+  
+      if (!isTokenFetched) {
+        console.log('Token not fetched yet');
+        return;
+      }
+  
+      console.log('Auth Token:', authToken);
+
     const response = await fetch("http://localhost:3001/payment/check-out", {
       method: "POST",
       headers: {
@@ -89,6 +108,7 @@ const handleBuyNowClickCustomized = async () => {
           method: "POST",
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`,
           },
           body: JSON.stringify({
             razorpay_order_id: order.order.id,
