@@ -36,8 +36,15 @@ const userSchema = mongoose.Schema({
     },
     orders: [
         {
-            type: String,
-            ref: "Payment",
+            orderId: {
+                type: String,
+                ref: "Payment",
+            },
+            status: {
+                type: String,
+                enum: ["Order Placed", "Preparation", "Out for Delivery", "Delivered"],
+                default: "Order Placed",
+            },
         },
     ],
 },  { timestamps: true }
