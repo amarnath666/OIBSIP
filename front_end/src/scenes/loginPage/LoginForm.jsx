@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { Grid, Paper, Typography, TextField, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, setToken } from 'scenes/state/authSlice';
+import { Grid, Paper, Typography, TextField, Button } from '@mui/material';
+import { login, setToken, setUserId } from 'scenes/state/authSlice';
 import NavBar from 'scenes/homePage/Navbar';
 import { Link, useNavigate } from 'react-router-dom';
-
-
+import axios
+ from 'axios';
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const authToken  = useSelector((state) => state.auth.token); 
+  const authToken = useSelector((state) => state.auth.token);
+  const userId = useSelector((state) => state.auth.userId);
+  const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-
-  const [loginError, setLoginError] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -30,25 +29,25 @@ const LoginForm = () => {
       const response = await axios.post('http://localhost:3001/auth/login', formData);
 
       if (response.status === 200) {
-        const { token } = response.data;
-        console.log('Authentication Token:', token);
+        const { token, userId } = response.data;
 
         dispatch(login());
         dispatch(setToken(token));
+        dispatch(setUserId(userId));
 
         navigate("/home");
-       
       }
     } catch (error) {
       console.error('Login error:', error);
 
-      if (error.response && error.response.status === 401) {
-        setLoginError('Incorrect email or password. Please try again.');
-      } else {
-        setLoginError('Incorrect email or password. Please try again.');
-      }
-    }
-  };
+     
+if (error.response && error.response.status === 401) {
+  setLoginError('Incorrect email or password. Please try again.');
+} else {
+  setLoginError('Incorrect email or password. Please try again.');
+}
+}
+};
 
   return (
     <Grid>
@@ -65,6 +64,7 @@ const LoginForm = () => {
                 type="email"
                 label="Email"
                 name="email"
+                value={formData.email}
                 onChange={handleChange}
                 margin="normal"
                 required
@@ -74,6 +74,7 @@ const LoginForm = () => {
                 type="password"
                 label="Password"
                 name="password"
+                value={formData.password}
                 onChange={handleChange}
                 margin="normal"
                 required

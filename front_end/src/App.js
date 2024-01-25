@@ -11,6 +11,7 @@ import Home from 'scenes/homePage/Home';
 import Admin from 'scenes/AdminPage/Admin';
 import CustomizedPizza from 'scenes/CustomPizza/CustomizedPizza';
 import PaymentSuccess from 'scenes/PizzaComponent/PaymentSuccess';
+import OrderStatus from 'scenes/PizzaComponent/OrderStatus';
 
 const App = () => {
   // const loggedIn = window.localStorage.getItem("isLoggedIn");
@@ -28,6 +29,7 @@ const App = () => {
       <Route path="/admin" element={<Admin />} />
       <Route path='/customizedPizza' element={<CustomizedPizza />} />
       <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+      <Route path="/orderstatus" element={<OrderStatus />} />
     </Routes>
   );
 };

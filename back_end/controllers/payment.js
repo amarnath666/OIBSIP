@@ -3,7 +3,8 @@ import Payment from "../models/Payment.js";
 import Razorpay from "razorpay";
 import User from "../models/User.js";
 import verifyAndDecodeToken from "../utils/verifyAndDecodeToken.js";
-import mongoose from 'mongoose';
+import Order from "../models/Order.js";
+import Admin from "../models/Admin.js";
 
 export const checkOut = async (req, res) => {
   try {
@@ -52,10 +53,19 @@ export const paymentVerification = async (req, res) => {
     const userId = decodedToken.userId;
     console.log('User ID:', userId);
 
+    // Create a new order
+    const newOrder = new Order({
+      userId: userId,
+      status: "Preparation",
+    });
+
+    // Save the new order
+    const savedOrder = await newOrder.save();
+
     // Update the user's document in the database with the new order ID
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { $push: { orders: razorpay_order_id } },
+      { $push: { orders: savedOrder._id } }, // Use the new order's ID
       { new: true }
     );
 
@@ -66,6 +76,10 @@ export const paymentVerification = async (req, res) => {
       razorpay_signature,
     });
     await payment.save();
+
+    // Update admin status to 'Order Received'
+    const adminEntry = new Admin({ userId });
+    await adminEntry.save();
 
     console.log("User document updated with order ID:", updatedUser);
 

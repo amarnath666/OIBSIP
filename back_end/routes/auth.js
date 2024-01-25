@@ -5,20 +5,25 @@ import generateToken from "../utils/jwtUtils.js";
 const router = express.Router();
 
 router.post("/register", register);
-router.post("/login", async (req, res) => {
-  try {
-    const { error, token, message } = await login(req.body.email, req.body.password);
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
 
-    if (error) {
-      return res.status(401).json({ error });
+  try {
+    const loginResult = await login(email, password);
+
+    if (loginResult.error) {
+      return res.status(401).json({ error: loginResult.error });
     }
 
-    return res.status(200).json({ token, message });
+    const { userId, token, message } = loginResult;
+    return res.status(200).json({ userId, token, message });
+
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("Login route error:", error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 
 router.post("/confirm-otp",  confirmOtp);

@@ -108,7 +108,7 @@ export const login = async (email, password) => {
 
     if (isPasswordValid) {
       const token = generateToken(user._id, user.role);
-      return { token, message: "Login successful!" };
+      return { userId: user._id, token, message: "Login successful!" };
     }
 
     return { error: "Invalid Password" };

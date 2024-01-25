@@ -16,6 +16,7 @@ import { baseOptions, sauceOptions, cheeseOptions, veggieOptions } from "./init/
 import paymentRoutes from "./routes/payment.js";
 import requireAuth from "./middleware/middleware.js";
 import User from "./models/User.js";
+import orderRoutes from "./routes/order.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -32,46 +33,6 @@ app.use(
     credentials: true,
   })
 );
-
-/* SESSION SETUP */
-// app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET,
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: {
-//       secure: false,
-//       maxAge: 1000 * 60 * 60 * 24,
-//     },
-//   })
-// );
-
-// /* Passport initialization and configuration */
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-// passport.serializeUser((user, done) => {
-//   console.log('Serializing user:', user);
-//   done(null, user.id);
-// });
-
-// passport.deserializeUser((id, done) => {
-//   console.log('Deserializing user ID:', id);
-//   User.findById(id)
-//     .then(user => {
-//       if (!user) {
-//         console.log('User not found with ID:', id);
-//         return done(null, null);
-//       }
-//       console.log('User found:', user);
-//       done(null, user);
-//     })
-//     .catch(err => {
-//       console.error('Error finding user by ID:', err);
-//       done(err, null);
-//     });
-// });
-
 
 passport.use(new LocalStrategy(
   { usernameField: 'email' },
@@ -97,10 +58,10 @@ passport.use(new LocalStrategy(
   }
 ));
 
-
 /* ROUTES */
 app.use("/auth", authRoutes);
 app.use("/payment", paymentRoutes);
+app.use("/order", orderRoutes);
 
 app.get("/pizza-varieties", (req, res) => {
   res.json(pizzaVarieties);

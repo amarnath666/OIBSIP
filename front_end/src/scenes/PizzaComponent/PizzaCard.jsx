@@ -58,7 +58,7 @@ const PizzaCard = ({ pizza }) => {
         handler: async function (response) {
           console.log(response);
           const { razorpay_payment_id: reference, razorpay_signature } = response;
-          window.location.href = `/paymentsuccess?reference=${reference}`;
+          // window.location.href = `/paymentsuccess?reference=${reference}`;
           
           // Manually trigger payment verification
           const verificationResponse = await fetch("http://localhost:3001/payment/payment-verification", {
