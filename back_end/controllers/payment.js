@@ -1,3 +1,5 @@
+// payment.controller.js
+
 import crypto from "crypto";
 import Payment from "../models/Payment.js";
 import Razorpay from "razorpay";
@@ -5,6 +7,10 @@ import User from "../models/User.js";
 import verifyAndDecodeToken from "../utils/verifyAndDecodeToken.js";
 import Order from "../models/Order.js";
 import Admin from "../models/Admin.js";
+
+// Variable to store the latest order information
+let latestOrderInfo = null;
+const ADMIN_UNIQUE_ID = 'yourUniqueAdminId'; // Set your desired unique identifier for admin
 
 export const checkOut = async (req, res) => {
   try {
@@ -56,7 +62,7 @@ export const paymentVerification = async (req, res) => {
     // Create a new order
     const newOrder = new Order({
       userId: userId,
-      status: "Preparation",
+      status: "Order Placed",
     });
 
     // Save the new order
@@ -77,9 +83,22 @@ export const paymentVerification = async (req, res) => {
     });
     await payment.save();
 
-    // Update admin status to 'Order Received'
-    const adminEntry = new Admin({ userId });
-    await adminEntry.save();
+    // Update admin status to 'Order Received' and add the order ID to the admin's orderIds array
+    const adminEntry = await Admin.findOneAndUpdate(
+      { adminId: ADMIN_UNIQUE_ID },
+      {
+        $push: { orderIds: savedOrder._id },
+        orderStatus: 'Order Received',
+      },
+      { new: true, upsert: true }
+    );
+
+    // Update the latest order information variable
+    latestOrderInfo = {
+      orderId: savedOrder._id,
+      userId: userId,
+      orderStatus: 'Order Received',
+    };
 
     console.log("User document updated with order ID:", updatedUser);
 
@@ -87,5 +106,53 @@ export const paymentVerification = async (req, res) => {
   } catch (error) {
     console.error("Error in paymentVerification:", error);
     res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
+
+export const getLatestOrderInfo = (req, res) => {
+  try {
+    if (latestOrderInfo) {
+      res.status(200).json({ success: true, latestOrderInfo });
+    } else {
+      res.status(404).json({ success: false, error: "No latest order available" });
+    }
+  } catch (error) {
+    console.error("Error while fetching latest order information:", error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
+
+// Endpoint for polling by the admin page
+export const pollForLatestOrderInfo = (req, res) => {
+  try {
+    if (latestOrderInfo) {
+      res.status(200).json({ success: true, latestOrderInfo });
+    } else {
+      res.status(404).json({ success: false, error: "No latest order available" });
+    }
+  } catch (error) {
+    console.error("Error while fetching latest order information:", error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
+
+export const updateOrderStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params; // Extract orderId from URL parameters
+    const { newOrderStatus } = req.body;
+
+    console.log(`Updating order status for order ID ${orderId} to ${newOrderStatus}`);
+
+    // Update the Admin model based on the provided order ID
+    const updatedAdmin = await Admin.findOneAndUpdate(
+      { 'orderIds': orderId },
+      { 'orderStatus': newOrderStatus },
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, updatedAdmin });
+  } catch (error) {
+    console.error('Error updating order status in Admin model:', error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 };

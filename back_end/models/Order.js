@@ -7,6 +7,10 @@ const orderSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  latestOrder: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Order",
+  },
   status: {
     type: String,
     enum: ["Order Placed", "Preparation", "Out for Delivery", "Delivered"],

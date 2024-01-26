@@ -1,88 +1,75 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateOrderStatus, setOrderStatus } from 'scenes/state/authSlice';
-import { TextField, Button, Typography, Container, Grid } from '@mui/material';
+// Admin.jsx
+
+import React, { useEffect, useState } from 'react';
 import NavBar from 'scenes/homePage/Navbar';
+import { MenuItem, TextField } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+import { setOrderStatus } from 'scenes/state/authSlice';
 
 const Admin = () => {
+  const [latestOrderInfo, setLatestOrderInfo] = useState(null);
   const dispatch = useDispatch();
-  const userId = useSelector((state) => state.auth.userId);
-  const orderStatus = useSelector((state) => state.auth.orderStatus);
-  const [newStatus, setNewStatus] = useState('');
 
-  useEffect(() => {
-    // Fetch order status from the backend when the component mounts
-    // You may need to adjust the API endpoint based on your backend setup
-    const fetchOrderStatus = async () => {
-      try {
-        const response = await fetch(`http://localhost:3001/order/getOrderStatus/${userId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const responseData = await response.json();
-        dispatch(setOrderStatus(responseData.orderStatus));
-      } catch (error) {
-        console.error('Error fetching order status:', error);
-      }
-    };
-
-    fetchOrderStatus();
-  }, [dispatch, userId]);
-
-  const handleStatusChange = async () => {
+  const pollForLatestOrderInfo = async () => {
     try {
-      // Assuming you have the orderId, you can include it in the request
-      const orderId = 'your-order-id'; // Replace with your actual order ID
-      const response = await fetch(`http://localhost:3001/order/order-status/${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ newStatus, orderId }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      const response = await fetch('http://localhost:3001/payment/pollLatestOrder');
+      if (response.ok) {
+        const data = await response.json();
+        setLatestOrderInfo(data.latestOrderInfo);
+      } else {
+        console.error('Failed to fetch latest order info');
       }
-
-      const responseData = await response.json();
-      dispatch(setOrderStatus(responseData.orderStatus));
     } catch (error) {
-      console.error('Error updating order status:', error);
-      // Handle error appropriately (e.g., show an error message to the user)
+      console.error('Error during fetch:', error);
     }
   };
 
+  const handleOrderStatusChange = async (newStatus) => {
+    try {
+      const orderId = latestOrderInfo.orderId;
+      const actionResult = await dispatch(setOrderStatus({ orderId, newOrderStatus: newStatus }));
+      const updatedOrderStatus = actionResult.payload;
+      console.log('Updated Order Status:', updatedOrderStatus);
+    } catch (error) {
+      console.error('Error updating order status:', error);
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      pollForLatestOrderInfo();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
-    <Container>
+    <div>
       <NavBar />
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs={12} md={6}>
+      <h1>Admin Page</h1>
+      {latestOrderInfo ? (
+        <div>
+          <h2>Latest Order Information:</h2>
+          <p>Order ID: {latestOrderInfo.orderId}</p>
+          <p>User ID: {latestOrderInfo.userId}</p>
+          
           <TextField
-            label="New Order Status"
+            select
+            label="Order Status"
             variant="outlined"
             fullWidth
-            value={newStatus}
-            onChange={(e) => setNewStatus(e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Button variant="contained" color="primary" onClick={handleStatusChange}>
-            Update Order Status
-          </Button>
-        </Grid>
-      </Grid>
-      <Typography variant="body1" style={{ marginTop: '16px' }}>
-        Current Order Status: {orderStatus}
-      </Typography>
-    </Container>
+            margin="normal"
+            onChange={(e) => handleOrderStatusChange(e.target.value)}
+          >
+            <MenuItem value="Confirmed">Confirmed</MenuItem>
+            <MenuItem value="Prepared">Prepared</MenuItem>
+            <MenuItem value="Delivered">Delivered</MenuItem>
+          </TextField>
+        </div>
+      ) : (
+        <p>No latest order available</p>
+      )}
+    </div>
   );
 };
 

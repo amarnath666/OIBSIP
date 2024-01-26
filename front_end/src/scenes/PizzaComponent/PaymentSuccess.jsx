@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Container } from '@mui/material';
+import { Typography, Container, Link } from '@mui/material';
 
 const PaymentSuccess = () => {
   // You can extract the reference from the URL parameters
@@ -14,7 +14,9 @@ const PaymentSuccess = () => {
       <Typography variant="body1">
         Thank you for your payment. Your order with reference ID <strong>{reference}</strong> has been confirmed.
       </Typography>
-      {/* You can customize this component further based on your design requirements */}
+      
+      {/* Link to order status */}
+      <Link to="/orderstatus">Check Order Status</Link>     
     </Container>
   );
 };

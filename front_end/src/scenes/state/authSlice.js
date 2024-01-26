@@ -1,4 +1,4 @@
-// authSlice.js
+// authReducer.js
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
@@ -22,24 +22,25 @@ export const fetchPizzaOptions = createAsyncThunk(
 
 export const updateOrderStatus = createAsyncThunk(
   'auth/updateOrderStatus',
-  async ({ orderId, newStatus }) => {
+  async () => {
     try {
-      const response = await fetch(`http://localhost:3001/order/order-status/${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ newStatus }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const responseData = await response.json();
-      return responseData.order.status;
+      const response = await axios.get('http://localhost:3001/payment/latestOrder'); // Corrected the endpoint
+      return response.data.orderStatus;
     } catch (error) {
       console.error('Error updating order status:', error);
+      throw error;
+    }
+  }
+);
+
+export const setOrderStatus = createAsyncThunk(
+  'auth/setOrderStatus',
+  async ({ orderId, newOrderStatus }) => {
+    try {
+      const response = await axios.put(`http://localhost:3001/payment/updateOrderStatus/${orderId}`, { newOrderStatus });
+      return response.data.orderStatus; // Assuming the server responds with the updated order status
+    } catch (error) {
+      console.error('Error setting order status:', error);
       throw error;
     }
   }
@@ -50,6 +51,7 @@ const initialState = {
   isAdmin: false,
   token: null,
   userId: null,
+  latestOrderInfo: null,
   pizzaVarieties: [],
   baseOptions: [],
   sauceOptions: [],
@@ -61,7 +63,7 @@ const initialState = {
     cheese: null,
     veggie: null,
   },
-  orderStatus: '', // Add order status to the initial state
+  orderStatus: '',
 };
 
 const authSlice = createSlice({
@@ -99,12 +101,11 @@ const authSlice = createSlice({
     setToken: (state, action) => {
       state.token = action.payload;
     },
-    setOrderStatus: (state, action) => {
-      state.orderStatus = action.payload;
-    },
     setUserId: (state, action) => {
-      console.log('Setting userId:', action.payload);
       state.userId = action.payload;
+    },
+    setLatestOrderInfo: (state, action) => {
+      state.latestOrderInfo = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -116,6 +117,9 @@ const authSlice = createSlice({
         state.veggieOptions = action.payload.veggieOptions;
       })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        state.orderStatus = action.payload;
+      })
+      .addCase(setOrderStatus.fulfilled, (state, action) => {
         state.orderStatus = action.payload;
       });
   },
@@ -131,11 +135,11 @@ export const {
   setSauce,
   setVeggie,
   setToken,
-  setOrderStatus,
-  setUserId
+  setUserId,
 } = authSlice.actions;
 
 export default authSlice.reducer;
+
 
 export const setPizzaOptions = (baseOptions, sauceOptions, cheeseOptions, veggieOptions) => {
   return {
