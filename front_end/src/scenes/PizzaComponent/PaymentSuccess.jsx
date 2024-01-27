@@ -1,5 +1,6 @@
 import React from 'react';
-import { Typography, Container, Link } from '@mui/material';
+import { Typography, Container } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const PaymentSuccess = () => {
   // You can extract the reference from the URL parameters

@@ -1,10 +1,8 @@
-// Admin.jsx
-
 import React, { useEffect, useState } from 'react';
 import NavBar from 'scenes/homePage/Navbar';
 import { MenuItem, TextField } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { setOrderStatus } from 'scenes/state/authSlice';
+import { updateOrderStatus } from 'scenes/state/authSlice';
 
 const Admin = () => {
   const [latestOrderInfo, setLatestOrderInfo] = useState(null);
@@ -27,7 +25,7 @@ const Admin = () => {
   const handleOrderStatusChange = async (newStatus) => {
     try {
       const orderId = latestOrderInfo.orderId;
-      const actionResult = await dispatch(setOrderStatus({ orderId, newOrderStatus: newStatus }));
+      const actionResult = await dispatch(updateOrderStatus({ orderId, newOrderStatus: newStatus }));
       const updatedOrderStatus = actionResult.payload;
       console.log('Updated Order Status:', updatedOrderStatus);
     } catch (error) {
@@ -52,6 +50,7 @@ const Admin = () => {
           <h2>Latest Order Information:</h2>
           <p>Order ID: {latestOrderInfo.orderId}</p>
           <p>User ID: {latestOrderInfo.userId}</p>
+      
           
           <TextField
             select

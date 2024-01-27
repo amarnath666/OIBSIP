@@ -1,5 +1,3 @@
-// authReducer.js
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -20,21 +18,31 @@ export const fetchPizzaOptions = createAsyncThunk(
   }
 );
 
-export const updateOrderStatus = createAsyncThunk(
-  'auth/updateOrderStatus',
-  async () => {
+export const updateUserOrderStatus = createAsyncThunk(
+  'orders/updateUserOrderStatus',
+  async ({ orderId, newStatus }, { getState, rejectWithValue }) => {
     try {
-      const response = await axios.get('http://localhost:3001/payment/latestOrder'); // Corrected the endpoint
-      return response.data.orderStatus;
+      const response = await fetch(`http://localhost:3001/order/orderStatus/${orderId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newStatus }),
+      });
+
+      const updatedOrder = await response.json();
+
+      // Return the updated order to fulfill the promise
+      return updatedOrder;
     } catch (error) {
-      console.error('Error updating order status:', error);
-      throw error;
+      console.error(error);
+      return rejectWithValue('Failed to update order status');
     }
   }
 );
 
-export const setOrderStatus = createAsyncThunk(
-  'auth/setOrderStatus',
+export const updateOrderStatus = createAsyncThunk(
+  'auth/updateOrderStatus',
   async ({ orderId, newOrderStatus }) => {
     try {
       const response = await axios.put(`http://localhost:3001/payment/updateOrderStatus/${orderId}`, { newOrderStatus });
@@ -51,7 +59,9 @@ const initialState = {
   isAdmin: false,
   token: null,
   userId: null,
-  latestOrderInfo: null,
+  orders: [],
+  status: 'idle',
+  error: null,
   pizzaVarieties: [],
   baseOptions: [],
   sauceOptions: [],
@@ -119,8 +129,19 @@ const authSlice = createSlice({
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         state.orderStatus = action.payload;
       })
-      .addCase(setOrderStatus.fulfilled, (state, action) => {
-        state.orderStatus = action.payload;
+      .addCase(updateUserOrderStatus.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateUserOrderStatus.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        // Update the order in the state
+        state.orders = state.orders.map((order) =>
+          order._id === action.payload._id ? action.payload : order
+        );
+      })
+      .addCase(updateUserOrderStatus.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   },
 });
@@ -151,4 +172,4 @@ export const setPizzaOptions = (baseOptions, sauceOptions, cheeseOptions, veggie
       veggieOptions,
     },
   };
-};
+}

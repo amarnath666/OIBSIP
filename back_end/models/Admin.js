@@ -2,20 +2,20 @@ import mongoose from 'mongoose';
 
 const adminSchema = new mongoose.Schema({
   adminId: {
-    type: String, // You can choose a unique identifier type (String, Number, etc.)
-    default: 'uniqueAdminId', // Set a constant value for the adminId
-    unique: true, // Ensure uniqueness
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  orderIds: [{
+  orderId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Order",
-  }],
-  orderStatus: {
+    required: true,
+  },
+  status: { // Update this field name to match the orderSchema
     type: String,
     enum: ['Order Received', 'Confirmed', 'Prepared', 'Delivered'],
     default: 'Order Received',
@@ -23,44 +23,42 @@ const adminSchema = new mongoose.Schema({
 });
 
 adminSchema.post('findOneAndUpdate', async function (doc) {
-  // Check if orderStatus is modified
-  if (this._update.$set && this._update.$set.orderStatus) {
+  console.log('Doc in findOneAndUpdate middleware:', doc);
+
+  // Check if status is modified
+  if (this._update.$set && this._update.$set.status) {
     try {
-      // Check if the order is already marked as 'Delivered'
-      if (this._update.$set.orderStatus === 'Delivered') {
-        // If it's 'Delivered', no further update is needed
-        return;
-      }
+      let statusToUpdate;
 
-      let orderStatusToUpdate;
-
-      switch (this._update.$set.orderStatus) {
+      switch (this._update.$set.status) {
         case 'Confirmed':
-          orderStatusToUpdate = 'Preparation';
+          statusToUpdate = 'Preparation';
           break;
         case 'Prepared':
-          orderStatusToUpdate = 'Out for Delivery';
+          statusToUpdate = 'Out for Delivery';
           break;
         case 'Delivered':
-          orderStatusToUpdate = 'Delivered Again';
+          statusToUpdate = 'Delivered';
           break;
         default:
-          orderStatusToUpdate = 'Order Placed';
+          statusToUpdate = 'Order Placed';
       }
 
-      // Update Order status based on Admin status
-      await mongoose.model('Order').updateMany(
-        { _id: { $in: doc.orderIds } },
-        { $set: { status: orderStatusToUpdate } }
+      console.log('OrderStatus to update:', this._update.$set.status);
+      console.log('Updated orderStatus in Admin:', statusToUpdate);
+
+      // Update the Order document first
+      await mongoose.model('Order').updateOne(
+        { _id: doc.orderId },
+        { $set: { status: statusToUpdate } }
       );
+      
     } catch (error) {
-      console.error('Error updating Order status:', error);
+      console.error('Error updating Order and Admin status:', error);
     }
   }
 });
 
-
 const Admin = mongoose.model('Admin', adminSchema);
-
 
 export default Admin;

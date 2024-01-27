@@ -1,9 +1,8 @@
 import express from 'express';
-import {  getOrderStatus } from '../controllers/order.js';
+import {  orderStatus } from '../controllers/order.js';
 
 const router = express.Router();
 
-// router.put('/order-status', updateOrderStatus);
-// router.put('/order-status-to-received', updateOrderStatusToReceived);
-router.get("/getorderstatus", getOrderStatus);
+router.put("/orderStatus/:orderId/status", orderStatus);
+
 export default router;

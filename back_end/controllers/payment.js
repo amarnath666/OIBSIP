@@ -1,6 +1,7 @@
 // payment.controller.js
 
 import crypto from "crypto";
+import mongoose from 'mongoose';
 import Payment from "../models/Payment.js";
 import Razorpay from "razorpay";
 import User from "../models/User.js";
@@ -10,7 +11,6 @@ import Admin from "../models/Admin.js";
 
 // Variable to store the latest order information
 let latestOrderInfo = null;
-const ADMIN_UNIQUE_ID = 'yourUniqueAdminId'; // Set your desired unique identifier for admin
 
 export const checkOut = async (req, res) => {
   try {
@@ -38,6 +38,10 @@ export const checkOut = async (req, res) => {
     });
   }
 };
+
+// payment.controller.js
+
+// ... (previous code)
 
 export const paymentVerification = async (req, res) => {
   try {
@@ -68,10 +72,27 @@ export const paymentVerification = async (req, res) => {
     // Save the new order
     const savedOrder = await newOrder.save();
 
+    // Log the savedOrder object
+  console.log('Saved Order:', savedOrder);
+
+  // Assuming savedOrder has a 'status' field, fetch it
+  const orderStatus = updatedOrder.status;
+
+    // Create a new Admin document for the order
+    const newAdmin = new Admin({
+      adminId: new mongoose.Types.ObjectId(),
+      userId: userId,
+      orderId: savedOrder._id,
+      status: 'Order Received',
+    });
+
+    // Save the new Admin document
+    await newAdmin.save();
+
     // Update the user's document in the database with the new order ID
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { $push: { orders: savedOrder._id } }, // Use the new order's ID
+      { $push: { orders: savedOrder._id } },
       { new: true }
     );
 
@@ -83,21 +104,11 @@ export const paymentVerification = async (req, res) => {
     });
     await payment.save();
 
-    // Update admin status to 'Order Received' and add the order ID to the admin's orderIds array
-    const adminEntry = await Admin.findOneAndUpdate(
-      { adminId: ADMIN_UNIQUE_ID },
-      {
-        $push: { orderIds: savedOrder._id },
-        orderStatus: 'Order Received',
-      },
-      { new: true, upsert: true }
-    );
-
     // Update the latest order information variable
     latestOrderInfo = {
       orderId: savedOrder._id,
       userId: userId,
-      orderStatus: 'Order Received',
+      status: orderStatus, 
     };
 
     console.log("User document updated with order ID:", updatedUser);
@@ -145,14 +156,15 @@ export const updateOrderStatus = async (req, res) => {
 
     // Update the Admin model based on the provided order ID
     const updatedAdmin = await Admin.findOneAndUpdate(
-      { 'orderIds': orderId },
-      { 'orderStatus': newOrderStatus },
+      { 'orderId': orderId },
+      { 'status': newOrderStatus },
       { new: true }
     );
 
-    res.status(200).json({ success: true, updatedAdmin });
+    console.log('Updated Admin:', updatedAdmin);
+
+    res.status(200).json({ success: true, updatedAdmin, updatedOrder });
   } catch (error) {
-    console.error('Error updating order status in Admin model:', error);
     res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 };
