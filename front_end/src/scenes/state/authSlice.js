@@ -18,29 +18,30 @@ export const fetchPizzaOptions = createAsyncThunk(
   }
 );
 
-export const updateUserOrderStatus = createAsyncThunk(
-  'orders/updateUserOrderStatus',
-  async ({ orderId, newStatus }, { getState, rejectWithValue }) => {
-    try {
-      const response = await fetch(`http://localhost:3001/order/orderStatus/${orderId}/status`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ newStatus }),
-      });
+//USER STATUS
+// export const updateUserOrderStatus = createAsyncThunk(
+//   'orders/updateUserOrderStatus',
+//   async ({ orderId }) => {
+//     try {
+//       const response = await fetch(`http://localhost:3001/order/orderStatus/${orderId}`, {
+//         method: 'PUT',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       });
 
-      const updatedOrder = await response.json();
+//       const updatedOrder = await response.json();
 
-      // Return the updated order to fulfill the promise
-      return updatedOrder;
-    } catch (error) {
-      console.error(error);
-      return rejectWithValue('Failed to update order status');
-    }
-  }
-);
+//       // Return the updated order to fulfill the promise
+//       return updatedOrder;
+//     } catch (error) {
+//       console.error(error);
+//       return rejectWithValue('Failed to update order status');
+//     }
+//   }
+//);
 
+//ADMIN STATUS
 export const updateOrderStatus = createAsyncThunk(
   'auth/updateOrderStatus',
   async ({ orderId, newOrderStatus }) => {
@@ -54,14 +55,30 @@ export const updateOrderStatus = createAsyncThunk(
   }
 );
 
+// FETCH LATEST ORDER ID
+export const fetchLatestOrderInfo = createAsyncThunk('order/fetchLatestOrderInfo', async () => {
+  try {
+    const response = await fetch("http://localhost:3001/payment/latestOrder");
+    const data = await response.json();
+    
+    if (data.success) {
+      return data.latestOrderInfo;
+    } else {
+      throw new Error("Error fetching latest order information");
+    }
+  } catch (error) {
+    throw new Error("Error fetching latest order information", error);
+  }
+});
+
 const initialState = {
   isAuthenticated: false,
   isAdmin: false,
   token: null,
   userId: null,
   orders: [],
-  status: 'idle',
-  error: null,
+  status: {},
+  latestOrderInfo: null,
   pizzaVarieties: [],
   baseOptions: [],
   sauceOptions: [],
@@ -114,9 +131,6 @@ const authSlice = createSlice({
     setUserId: (state, action) => {
       state.userId = action.payload;
     },
-    setLatestOrderInfo: (state, action) => {
-      state.latestOrderInfo = action.payload;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -129,19 +143,20 @@ const authSlice = createSlice({
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         state.orderStatus = action.payload;
       })
-      .addCase(updateUserOrderStatus.pending, (state) => {
-        state.status = 'loading';
+      // .addCase(updateUserOrderStatus.fulfilled, (state, action) => {
+      //   // Update the order status in the state
+      //   state.status = action.payload;
+      // })
+      .addCase(fetchLatestOrderInfo.pending, (state) => {
+        state.loading = true;
       })
-      .addCase(updateUserOrderStatus.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        // Update the order in the state
-        state.orders = state.orders.map((order) =>
-          order._id === action.payload._id ? action.payload : order
-        );
+      .addCase(fetchLatestOrderInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        state.latestOrderInfo = action.payload;
       })
-      .addCase(updateUserOrderStatus.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
+      .addCase(fetchLatestOrderInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
@@ -157,6 +172,7 @@ export const {
   setVeggie,
   setToken,
   setUserId,
+  setLatestOrderInfo
 } = authSlice.actions;
 
 export default authSlice.reducer;

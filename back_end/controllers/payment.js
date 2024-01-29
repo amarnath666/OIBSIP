@@ -72,11 +72,11 @@ export const paymentVerification = async (req, res) => {
     // Save the new order
     const savedOrder = await newOrder.save();
 
-    // Log the savedOrder object
-  console.log('Saved Order:', savedOrder);
+  //   // Log the savedOrder object
+  // console.log('Saved Order:', savedOrder);
 
-  // Assuming savedOrder has a 'status' field, fetch it
-  const orderStatus = updatedOrder.status;
+  // // Assuming savedOrder has a 'status' field, fetch it
+    const orderStatus = savedOrder.status;
 
     // Create a new Admin document for the order
     const newAdmin = new Admin({
@@ -103,6 +103,7 @@ export const paymentVerification = async (req, res) => {
       razorpay_signature,
     });
     await payment.save();
+    console.log('Payment Information Saved:', payment);
 
     // Update the latest order information variable
     latestOrderInfo = {

@@ -14,8 +14,7 @@ import PaymentSuccess from 'scenes/PizzaComponent/PaymentSuccess';
 import OrderStatus from 'scenes/PizzaComponent/OrderStatus';
 
 const App = () => {
-  // const loggedIn = window.localStorage.getItem("isLoggedIn");
-  // console.log(loggedIn, "login");
+
   return (
     <Routes>
       <Route path="/register" element={<RegistrationForm />} />
@@ -29,7 +28,7 @@ const App = () => {
       <Route path="/admin" element={<Admin />} />
       <Route path='/customizedPizza' element={<CustomizedPizza />} />
       <Route path="/paymentsuccess" element={<PaymentSuccess />} />
-      <Route path="/orderstatus" element={<OrderStatus />} />
+      <Route path="/orderstatus/:orderId" element={<OrderStatus />} />
     </Routes>
   );
 };
