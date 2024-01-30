@@ -1,5 +1,3 @@
-// payment.controller.js
-
 import crypto from "crypto";
 import mongoose from 'mongoose';
 import Payment from "../models/Payment.js";
@@ -8,6 +6,7 @@ import User from "../models/User.js";
 import verifyAndDecodeToken from "../utils/verifyAndDecodeToken.js";
 import Order from "../models/Order.js";
 import Admin from "../models/Admin.js";
+import { updateStock } from "./order.js";
 
 // Variable to store the latest order information
 let latestOrderInfo = null;
@@ -113,6 +112,16 @@ export const paymentVerification = async (req, res) => {
     };
 
     console.log("User document updated with order ID:", updatedUser);
+
+    if ('selectedOptions' in req.body) {
+      const { selectedOptions } = req.body;
+      const { base, cheese, sauce, veggie } = selectedOptions;
+
+      // Call the function to update stock after successful payment
+      await updateStock({ base, cheese, sauce, veggie });
+
+      console.log('Stock updated successfully');
+    }
 
     res.status(200).json({ success: true, reference: razorpay_payment_id });
   } catch (error) {

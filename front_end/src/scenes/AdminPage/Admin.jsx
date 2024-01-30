@@ -3,6 +3,7 @@ import NavBar from 'scenes/homePage/Navbar';
 import { MenuItem, TextField } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateOrderStatus } from 'scenes/state/authSlice';
+import Inventory from './Inventory';
 
 const Admin = () => {
   const [latestOrderInfo, setLatestOrderInfo] = useState(null);
@@ -68,6 +69,12 @@ const Admin = () => {
       ) : (
         <p>No latest order available</p>
       )}
+      <Inventory ingredient="base" />
+      <Inventory ingredient="sauce" />
+      <Inventory ingredient="cheese" />
+      <Inventory ingredient="veggie" />
+      <Inventory ingredient="meat" />
+
     </div>
   );
 };

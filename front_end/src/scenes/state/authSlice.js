@@ -18,30 +18,7 @@ export const fetchPizzaOptions = createAsyncThunk(
   }
 );
 
-//USER STATUS
-// export const updateUserOrderStatus = createAsyncThunk(
-//   'orders/updateUserOrderStatus',
-//   async ({ orderId }) => {
-//     try {
-//       const response = await fetch(`http://localhost:3001/order/orderStatus/${orderId}`, {
-//         method: 'PUT',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//       });
-
-//       const updatedOrder = await response.json();
-
-//       // Return the updated order to fulfill the promise
-//       return updatedOrder;
-//     } catch (error) {
-//       console.error(error);
-//       return rejectWithValue('Failed to update order status');
-//     }
-//   }
-//);
-
-//ADMIN STATUS
+//ADMIN ORDER STATUS
 export const updateOrderStatus = createAsyncThunk(
   'auth/updateOrderStatus',
   async ({ orderId, newOrderStatus }) => {
@@ -143,10 +120,6 @@ const authSlice = createSlice({
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         state.orderStatus = action.payload;
       })
-      // .addCase(updateUserOrderStatus.fulfilled, (state, action) => {
-      //   // Update the order status in the state
-      //   state.status = action.payload;
-      // })
       .addCase(fetchLatestOrderInfo.pending, (state) => {
         state.loading = true;
       })

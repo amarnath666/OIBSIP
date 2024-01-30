@@ -114,6 +114,12 @@ const handleBuyNowClickCustomized = async () => {
             razorpay_order_id: order.order.id,
             razorpay_payment_id: reference,
             razorpay_signature: razorpay_signature,
+            selectedOptions: {
+              base: base.name,
+              cheese: cheese.name,
+              sauce: sauce.name,
+              veggie: veggie.name,
+            },
           }),
         });
 

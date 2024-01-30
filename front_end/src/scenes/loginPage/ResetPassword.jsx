@@ -26,7 +26,7 @@ const ResetPassword = () => {
       const response = await axios.post('http://localhost:3001/auth/reset-password', formData);
 
       if (response.status === 200) {
-       navigate("/login");
+       navigate("/");
         
         console.log('Password reset successfully');
         

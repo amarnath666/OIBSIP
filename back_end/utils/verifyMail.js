@@ -5,14 +5,14 @@ const verifyMail = async(email, text) => {
     let transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: process.env.USER,
-        pass: process.env.PASS,
+        user: process.env.ADMIN_EMAIL,
+        pass: process.env.ADMIN_PASSWORD,
       },
     });
 
     // Send email
     let info = await transporter.sendMail({
-      from: process.env.USER, // Sender email
+      from: process.env.ADMIN_EMAIL, // Sender email
       to: email, // Receiver
       subject: "One-Time Password (OTP)",
       text: text, // Use the provided OTP text
