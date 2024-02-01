@@ -10,7 +10,9 @@ const meatSchema = new mongoose.Schema({
         required: true, 
         default: 30 
       },
-});
+    },
+    { timestamps: true}
+    );
 
 const Meat = mongoose.model('Meat', meatSchema);
 

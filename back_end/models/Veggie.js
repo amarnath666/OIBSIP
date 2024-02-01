@@ -13,8 +13,10 @@ const veggieSchema = new mongoose.Schema({
       img: {
         type: String,  
         required: false  
-      }
-});
+      },
+    },
+      { timestamps: true}
+    );
 
 const Veggie = mongoose.model('Veggie', veggieSchema);
 

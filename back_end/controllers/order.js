@@ -6,6 +6,16 @@ import Veggie from '../models/Veggie.js';
 import nodemailer from 'nodemailer';
 import sendLowStockEmail from "../utils/stockEmail.js";
 
+export const getOrders = async (req, res) => {
+  try {
+    const orders =  await Order.find().populate("userId").exec();
+    res.json(orders);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export const orderStatus = async (req, res) => {
   const { orderId } = req.params;
   const { newStatus } = req.body;

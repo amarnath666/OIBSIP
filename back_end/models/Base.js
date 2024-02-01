@@ -13,8 +13,9 @@ const baseSchema = new mongoose.Schema({
       img: {
         type: String,  
         required: false  
-      }
-});
+      },
+    },
+    { timestamps: true});
 
 const Base = mongoose.model('Base', baseSchema);
 

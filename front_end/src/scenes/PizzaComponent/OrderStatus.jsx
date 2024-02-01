@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faClock, faTruck, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
+import NavBar from 'scenes/homePage/Navbar';
+import { Divider, Stepper, Step, StepLabel, Typography, Box, useMediaQuery } from '@mui/material';
+
+const icons = [faClock, faBoxOpen, faTruck, faCheck];
+const steps = ['Order Placed', 'Preparation', 'Out for Delivery', 'Delivered'];
 
 const OrderStatus = () => {
+  const isNonMobileScreens = useMediaQuery("(min-width: 500px)"); // Use min-width to target non-mobile screens
   const { orderId } = useParams();
   const [orderStatus, setOrderStatus] = useState(null);
 
@@ -12,7 +20,6 @@ const OrderStatus = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        // No need to send a specific newStatus in the request body
       });
 
       if (!response.ok) {
@@ -23,39 +30,92 @@ const OrderStatus = () => {
       const updatedOrder = await response.json();
       console.log('Updated Order:', updatedOrder);
 
-      // Update the order status in the state
       setOrderStatus(updatedOrder.status);
     } catch (error) {
       console.error('Error:', error.message);
-      // Show error message in UI or perform other error handling actions
       alert(`Error: ${error.message}`);
     }
   };
 
-  // Periodically update order status using polling
   useEffect(() => {
     const intervalId = setInterval(() => {
       updateOrderStatus();
-    }, 5000); // Poll every 5 seconds (adjust as needed)
+    }, 1000);
 
-    // Cleanup interval when component unmounts
     return () => clearInterval(intervalId);
   }, [orderId]);
 
-  // Popup component to show the current order status
-  const Popup = () => (
-    <div style={{ position: 'fixed', top: '10%', left: '50%', transform: 'translate(-50%, -50%)', background: 'white', padding: '20px', border: '1px solid #ccc' }}>
-      <p>Current Order Status: {orderStatus}</p>
-    </div>
-  );
-
   return (
-    <div>
-      {/* Render the Popup component */}
-      {orderStatus && <Popup />}
-
-      {/* ... rest of your component code */}
-    </div>
+    <>
+      <NavBar />
+      <Typography
+        variant="h4"
+        style={{
+          fontSize: isNonMobileScreens ? '3rem' : '2rem',
+          marginTop: '3rem',
+          marginBottom: '1rem',
+          marginLeft: isNonMobileScreens ? '5rem' : '2rem',
+          color: "#463E3F"
+        }}
+      >
+        Track Order Status
+      </Typography>
+      <Box textAlign="center">
+        <Stepper
+          activeStep={icons.indexOf(orderStatus)}
+          orientation="vertical"
+          style={{ marginLeft: isNonMobileScreens ? '5rem' : '2rem' }}
+        >
+          {steps.map((label, index) => (
+            <Step key={index}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'start',
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: '1rem',
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={icons[index]}
+                    style={{
+                      fontSize: isNonMobileScreens ? '2rem' : '1.5rem',
+                      color:
+                        index <= steps.indexOf(orderStatus)
+                          ? index === steps.indexOf(orderStatus)
+                            ? '#1976D2'
+                            : 'grey'
+                          : '#463E3F',
+                        
+                    }}
+                  />
+                </div>
+                <div>
+                  <Typography
+                    variant="body1"
+                    style={{
+                      fontSize: isNonMobileScreens ? '2rem' : '1.5rem',
+                      color:
+                        index <= steps.indexOf(orderStatus)
+                          ? index === steps.indexOf(orderStatus)
+                            ? '#1976D2'
+                            : 'grey'
+                          : '#463E3F',
+                    }}
+                  >
+                    {label}
+                  </Typography>
+                </div>
+              </div>
+            </Step>
+          ))}
+        </Stepper>
+      </Box>
+    </>
   );
 };
 

@@ -13,8 +13,9 @@ const cheeseSchema = new mongoose.Schema({
       img: {
         type: String,  
         required: false  
-      }
-});
+      } },
+      { timestamps: true}
+      );
 
 const Cheese = mongoose.model('Cheese', cheeseSchema);
 

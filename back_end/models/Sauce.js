@@ -13,8 +13,9 @@ const sauceSchema = new mongoose.Schema({
   img: {
     type: String,  
     required: false  
-  }
-});
+  }},
+  { timestamps: true}
+  );
 
 const Sauce = mongoose.model('Sauce', sauceSchema);
 

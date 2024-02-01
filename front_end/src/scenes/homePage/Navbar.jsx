@@ -50,9 +50,10 @@ const NavBar = () => {
     return (
         <AppBar position="sticky">
             <Toolbar>
-                <Typography variant="h5" component="div" sx={{ flexGrow: 1}}>
-                    Pizzify
-                </Typography>
+            <Typography variant="h5" component={Link} to="/home" sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}>
+                Pizzify
+            </Typography>
+
 
                 {isSmallScreen && (
                     <IconButton

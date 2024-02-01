@@ -15,11 +15,13 @@ const adminSchema = new mongoose.Schema({
     ref: "Order",
     required: true,
   },
-  status: { // Update this field name to match the orderSchema
+  status: {
     type: String,
     enum: ['Order Received', 'Confirmed', 'Prepared', 'Delivered'],
     default: 'Order Received',
   },
+}, {
+  timestamps: true, // Add timestamps to the schema
 });
 
 adminSchema.post('findOneAndUpdate', async function (doc) {
