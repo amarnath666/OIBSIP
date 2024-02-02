@@ -40,7 +40,7 @@ const OrderStatus = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       updateOrderStatus();
-    }, 1000);
+    }, 5000);
 
     return () => clearInterval(intervalId);
   }, [orderId]);

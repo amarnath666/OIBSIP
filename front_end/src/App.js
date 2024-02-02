@@ -12,6 +12,7 @@ import Admin from 'scenes/AdminPage/Admin';
 import CustomizedPizza from 'scenes/CustomPizza/CustomizedPizza';
 import PaymentSuccess from 'scenes/PizzaComponent/PaymentSuccess';
 import OrderStatus from 'scenes/PizzaComponent/OrderStatus';
+import InventoryPage from 'scenes/AdminPage/InventoryPage';
 
 const App = () => {
 
@@ -29,6 +30,7 @@ const App = () => {
       <Route path='/customizedPizza' element={<CustomizedPizza />} />
       <Route path="/paymentsuccess" element={<PaymentSuccess />} />
       <Route path="/orderstatus/:orderId" element={<OrderStatus />} />
+      <Route path="/inventory" element={<InventoryPage />} />
     </Routes>
   );
 };

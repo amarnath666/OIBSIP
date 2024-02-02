@@ -6,10 +6,12 @@ import { useTheme } from "@mui/system";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { logout } from "scenes/state/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
+
 
 const NavBar = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const dispatch = useDispatch();
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const isAdmin = useSelector((state) => state.auth.isAdmin);
@@ -99,6 +101,16 @@ const NavBar = () => {
             <ListItem Button onClick={handleLogout}>
                 <ListItemText primary="Logout" />
             </ListItem>
+            {location.pathname === "/admin" && (
+                <ListItem Button >
+                <ListItemText primary="Orders" component={Link} to="/admin"/>
+            </ListItem>
+            )}
+             {location.pathname === "/inventory" && (
+                <ListItem Button >
+                <ListItemText primary="Inventory" />
+            </ListItem>
+            )}
         </>
     )}
 </List>
@@ -129,7 +141,17 @@ const NavBar = () => {
                             </>
                         )}
                             {!isAuthenticated && isAdmin &&(
-                                <>                               
+                                <> 
+                                   {location.pathname === '/admin' && (
+                                        <Button color="inherit" component={Link} to="/inventory">
+                                        Inventory
+                                        </Button>
+                                    )}
+                                    {location.pathname === '/inventory' && (
+                                        <Button color="inherit" component={Link} to="/admin">
+                                        Orders
+                                        </Button>
+                                    )}
                                     <Button color="inherit" onClick={handleLogout}>
                                         Logout
                                     </Button>
