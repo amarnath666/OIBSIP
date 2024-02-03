@@ -6,6 +6,7 @@ import { setAdmin } from 'scenes/state/authSlice';
 import { login } from 'scenes/state/authSlice';
 import { useDispatch } from 'react-redux';
 import NavBar from 'scenes/homePage/Navbar';
+import LockIcon from '@mui/icons-material/Lock';
 
 const AdminLogin = () => {
     const navigate = useNavigate();
@@ -45,12 +46,19 @@ const AdminLogin = () => {
     return (
       <div>
         <NavBar />
-        <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
+        <Grid container justifyContent="center" alignItems="center" style={{ height: '80vh' }}>
       <Grid item xs={10} sm={8} md={6} lg={4}>
-        <Paper elevation={3} style={{ padding: '20px' }}>
-          <Typography variant="h5" gutterBottom>
-            Admin Login
-          </Typography>
+        <Paper elevation={0} style={{ padding: '20px' }}>
+        <Grid container justifyContent="center" alignItems="center" direction="column" spacing={1}>
+              <Grid item>
+                <LockIcon fontSize="medium" style={{ backgroundColor: '#1976D2', color: '#fff', padding: '10px', borderRadius: '50%' }} />
+              </Grid>
+              <Grid item>
+                <Typography variant="h5" textAlign="center" fontWeight="700" color="blue">
+                  Admin login
+                </Typography>
+              </Grid>
+            </Grid>
         <form onSubmit={handleAdminLogin}>
             <TextField
               fullWidth
@@ -70,7 +78,7 @@ const AdminLogin = () => {
               margin="normal"
               required
             />
-            <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
+            <Button fullWidth type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
               Login
             </Button>
           </form>

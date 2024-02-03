@@ -28,7 +28,7 @@ router.post('/login', async (req, res) => {
 
 router.post("/confirm-otp",  confirmOtp);
 router.post("/forgot-password", forgotPassword);
-router.post("/reset-password", resetPassword);
+router.post("/reset-password/:email", resetPassword);
 router.post("/admin-login", adminLogin);
 router.post("/logout", logout);
 

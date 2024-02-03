@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
-import { Typography, Card, CardContent, CardMedia, Button } from '@mui/material';
+import { Typography, Card, CardContent, CardMedia, Button, useMediaQuery } from '@mui/material';
 import NavBar from "scenes/homePage/Navbar";
 
 const CustomizedPizza = () => {
@@ -8,6 +8,7 @@ const CustomizedPizza = () => {
   const { base, sauce, cheese, veggie } = selectedOptions;
   const [isTokenFetched, setIsTokenFetched] = useState(false);
   const authToken = useSelector((state) => state.auth.token);
+  const isNonMobileScreens = useMediaQuery("(min-width: 450px)");
 
   useEffect(() => {
     // Check if the authToken is available and set isTokenFetched to true accordingly
@@ -153,24 +154,46 @@ const handleBuyNowClickCustomized = async () => {
   return (
     <div style={{ margin: 0, padding: 0 }}>
       <NavBar />
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: "2rem" }}>
-       
-        <Card style={{ maxWidth: 400, marginBottom: '1rem',  border: 'none'}}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: "1.5rem",  height: "87vh" }}>
+
+        <Card
+          sx={{
+            maxWidth: isNonMobileScreens ? 400 : 350,
+            marginBottom: '1rem',
+            border: 'none',
+            transition: "transform 0.3s, box-shadow 0.3s",
+            "&:hover": { transform: "scale(1.05)", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" },
+          }}
+        >
           <CardMedia
             component="img"
             alt={customizedPizza.name}
-            style={{ width: '100%',objectFit: 'cover' }}
+            style={{ width: '100%', objectFit: 'cover', transition: "transform 0.3s", "&:hover": { transform: "scale(1.1)" } }}
             image={customizedPizza.img}
           />
           <CardContent style={{ boxSizing: 'border-box', width: '100%', paddingTop: 8 }}>
-            <Typography variant="h4" fontWeight={600}>{customizedPizza.name}</Typography>
-            <Typography variant="body2" style={{ paddingBottom: 5 }}>{customizedPizza.description}</Typography>
+            <Typography 
+            variant={isNonMobileScreens ? "h5" : "h6"} 
+            fontWeight={600}>
+            {customizedPizza.name}
             
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: "center" , marginTop: "3px"}}>
+            </Typography>
+            <Typography variant="body2" style={{ paddingBottom: 5 }}>{customizedPizza.description}</Typography>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: "center", marginTop: "3px" }}>
               <Typography variant="body2" fontWeight={550} fontSize={20}>
                 &#8377;{customizedPizza.price}
               </Typography>
-              <Button variant="contained" color="primary" style={{ width: '100%', maxWidth: '45%', fontWeight: "500" }} onClick={handleBuyNowClickCustomized}>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ width: '100%', maxWidth: '45%', fontWeight: "500" }}
+                onClick={handleBuyNowClickCustomized}
+                sx={{
+                  "&:hover": { backgroundColor: "#388e3c" },
+                  "&:active": { boxShadow: "none", backgroundColor: "#1e4e5d" },
+                }}
+              >
                 Buy Now
               </Button>
             </div>

@@ -19,12 +19,11 @@ const App = () => {
   return (
     <Routes>
       <Route path="/register" element={<RegistrationForm />} />
-      <Route path="/otp-verification" element={<OTPVerification />} />
+      <Route path="/otp-verification/:email" element={<OTPVerification />} />
       <Route path="/admin-login" element={<AdminLogin />} />
       <Route path="/forgot-password" element={<ForgotPasswordForm />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/reset-password/:email" element={<ResetPassword />} />
       <Route path="/" element={ <LoginForm />} />
-      {/* <Route path="/" element={loggedIn ? <Home /> : <LoginForm />} /> */}
       <Route path="/home" element={<Home />} />
       <Route path="/admin" element={<Admin />} />
       <Route path='/customizedPizza' element={<CustomizedPizza />} />

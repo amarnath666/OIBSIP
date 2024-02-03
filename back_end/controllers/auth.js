@@ -51,14 +51,14 @@ export const register = async (req, res) => {
   }
 };
 
-// controllers/authController.js
-
 // Confirm OTP for user verification
 export const confirmOtp = async (req, res) => {
-  const { email, enteredOTP } = req.body;
+  const { email } = req.params;
+  const { enteredOTP } = req.body;
 
   try {
     // Find the user in the database
+    const { email } = req.query;
     const user = await User.findOne({ email });
 
     // Check if the user exists
@@ -91,7 +91,6 @@ export const confirmOtp = async (req, res) => {
 
 
 // User login
-
 export const login = async (email, password) => {
   try {
     const user = await User.findOne({ email });
@@ -118,10 +117,7 @@ export const login = async (email, password) => {
   }
 };
 
-// ... (other controller functions)
-
-
-// User forgot password
+// forgot password
 export const forgotPassword = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
@@ -152,7 +148,8 @@ export const forgotPassword = async (req, res) => {
 // User reset password after receiving OTP
 export const resetPassword = async (req, res) => {
   try {
-    const { email, resetOTP, password } = req.body;
+    const { email } = req.params;
+    const { resetOTP, password } = req.body;
     const user = await User.findOne({
       email,
       resetOTP,
@@ -163,7 +160,7 @@ export const resetPassword = async (req, res) => {
     console.log('User found in the database:', user);
 
     if (!user) {
-      return res.status(400).json({ error: "Invalid or expired OTP" });
+      return res.status(400).json({ error: "User not found" });
     }
 
     // Log current time and OTP Expiration from the user

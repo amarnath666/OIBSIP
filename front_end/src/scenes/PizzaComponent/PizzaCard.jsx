@@ -76,8 +76,6 @@ const PizzaCard = ({ pizza }) => {
 
           const verificationResult = await verificationResponse.json();
           console.log("Payment Verification Response:", verificationResult);
-
-          // Handle the result as needed
         },
       };
 
@@ -93,14 +91,24 @@ const PizzaCard = ({ pizza }) => {
   };
 
   return (
-    <Card sx={{ marginTop: "0.2rem" }}>
+    <Card
+      sx={{
+        marginTop: "0.2rem",
+        transition: "transform 0.3s, box-shadow 0.3s",
+        "&:hover": { transform: "scale(1.05)", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" },
+      }}
+    >
       <CardMedia
         component="img"
         height="275"
         width="100%"
         image={`${process.env.PUBLIC_URL}/${pizza.img}`}
         alt={pizza.alt}
-        style={{ objectFit: "cover" }}
+        style={{
+          objectFit: "cover",
+          transition: "transform 0.3s",
+          "&:hover": { transform: "scale(1.1)" },
+        }}
       />
       <CardContent>
         <Typography variant="h6" gutterBottom>
@@ -111,12 +119,21 @@ const PizzaCard = ({ pizza }) => {
           <Typography variant="h6" color="text.secondary">
             &#8377;{pizza.price}
           </Typography>
-          <Button variant="contained" color="primary" onClick={handleBuyNowClick}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleBuyNowClick}
+            sx={{
+              "&:hover": { backgroundColor: "#388e3c" },
+              "&:active": { boxShadow: "none", backgroundColor: "#1e4e5d" },
+            }}
+          >
             Buy Now
           </Button>
         </Box>
       </CardContent>
-    </Card>
+</Card>
+
   );
 };
 

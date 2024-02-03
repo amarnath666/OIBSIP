@@ -8,7 +8,7 @@ const cheeseSchema = new mongoose.Schema({
       quantity: { 
         type: Number, 
         required: true, 
-        default: 50
+        default: 30
       },
       img: {
         type: String,  

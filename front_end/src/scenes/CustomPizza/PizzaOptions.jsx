@@ -79,6 +79,8 @@ const PizzaOptions = () => {
               cursor: 'pointer',
               backgroundColor: selectedOption === option ? 'lightblue' : 'white',
               position: 'relative',
+              transition: 'transform 0.3s, box-shadow 0.3s',
+              '&:hover': { transform: 'scale(1.05)', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' },
             }}
           >
             <CardMedia component="img" height="120" image={option.img} alt={option.name} />
@@ -155,6 +157,8 @@ const PizzaOptions = () => {
           fontSize: '1.2rem',
           fontWeight: 'bold',
           boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+          transition: 'background-color 0.3s',
+          '&:hover': { backgroundColor: '#388e3c' },
         }}
       >
         Customize

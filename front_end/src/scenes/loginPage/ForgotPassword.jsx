@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Grid, Paper, Typography, TextField, Button, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import NavBar from 'scenes/homePage/Navbar';
+import LockIcon from '@mui/icons-material/Lock';
 
 const ForgotPasswordForm = () => {
     const navigate = useNavigate();
@@ -27,7 +27,7 @@ const ForgotPasswordForm = () => {
 
             if (response.status === 200) {
                 setResetPasswordSuccess('Password reset OTP sent. Check your email.');
-                navigate("/reset-password");
+                navigate(`/reset-password/${formData.email}`);
             }
         } catch (error) {
             console.error('Forgot password error:', error);
@@ -45,46 +45,52 @@ const ForgotPasswordForm = () => {
     return (
         <div>
             <NavBar />
-            <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
-            <Grid item xs={10} sm={8} md={6} lg={4}>
-                <Paper elevation={3} style={{ padding: '20px' }}>
-                    <Typography variant="h5" gutterBottom>
-                        Forgot Password
-                    </Typography>
-                    <form onSubmit={handleResetPassword}>
-                        <TextField
-                            fullWidth
-                            type="email"
-                            label="Email"
-                            name="email"
-                            onChange={handleChange}
-                            margin="normal"
-                            required
-                        />
-                        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
-                            {loading ? (
-                                <React.Fragment>
-                                    <CircularProgress size={24} color="inherit" style={{ marginRight: '10px' }} />
-                                    Please wait...
-                                </React.Fragment>
-                            ) : (
-                                'Reset Password'
-                            )}
-                        </Button>
-                    </form>
-                    {resetPasswordError && (
-                        <Typography color="error" style={{ marginTop: '10px' }}>
-                            {resetPasswordError}
-                        </Typography>
-                    )}
-                    {resetPasswordSuccess && (
-                        <Typography style={{ marginTop: '10px' }}>{resetPasswordSuccess}</Typography>
-                    )}
-                </Paper>
+            <Grid container justifyContent="center" alignItems="center" style={{ height: '80vh' }}>
+                <Grid item xs={10} sm={8} md={6} lg={4}>
+                    <Paper elevation={0} style={{ padding: '20px' }}>
+                    <Grid container justifyContent="center" alignItems="center" direction="column" spacing={1}>
+                        <Grid item>
+                            <LockIcon fontSize="medium" style={{ backgroundColor: '#1976D2', color: '#fff', padding: '10px', borderRadius: '50%' }} />
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="h5" textAlign="center" fontWeight="700" color="blue">
+                                Forgot Password
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                        <form onSubmit={handleResetPassword}>
+                            <TextField
+                                fullWidth
+                                type="email"
+                                label="Email"
+                                name="email"
+                                onChange={handleChange}
+                                margin="normal"
+                                required
+                            />
+                            <Button type="submit" variant="contained" fullWidth color="primary" style={{ marginTop: '10px' }}>
+                                {loading ? (
+                                    <React.Fragment>
+                                        <CircularProgress size={24} color="inherit" style={{ marginRight: '10px' }} />
+                                        Please wait...
+                                    </React.Fragment>
+                                ) : (
+                                    'Reset Password'
+                                )}
+                            </Button>
+                        </form>
+                        {resetPasswordError && (
+                            <Typography color="error" style={{ marginTop: '10px' }}>
+                                {resetPasswordError}
+                            </Typography>
+                        )}
+                        {resetPasswordSuccess && (
+                            <Typography style={{ marginTop: '10px' }}>{resetPasswordSuccess}</Typography>
+                        )}
+                    </Paper>
+                </Grid>
             </Grid>
-        </Grid>
         </div>
-        
     );
 };
 

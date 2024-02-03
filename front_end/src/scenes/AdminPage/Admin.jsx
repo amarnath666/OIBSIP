@@ -15,6 +15,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { updateOrderStatus } from 'scenes/state/authSlice';
 import Inventory from './Inventory';
+import { textAlign } from '@mui/system';
 
 const styles = {
   tableContainer: {
@@ -113,54 +114,57 @@ const Admin = () => {
   return (
     <div>
       <NavBar />
-      <h1>Admin Dashboard</h1>
+        <h1 style={{ textAlign: "center"}}>Admin Dashboard</h1>
+        <hr />
       {filteredOrders === undefined ? (
         <p>Loading...</p>
       ) : filteredOrders.length > 0 ? (
         <div>
-          <h2>All Orders</h2>
-          <TableContainer component={Paper} style={styles.tableContainer}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell style={styles.tableHeaderCell}>Order ID</TableCell>
-                  <TableCell style={styles.tableHeaderCell}>Customer</TableCell>
-                  <TableCell style={styles.tableHeaderCell}>Status</TableCell>
-                  <TableCell style={styles.tableHeaderCell}>Order Received</TableCell>
+        <h3 style={{ textAlign: "center" }}>All Orders</h3>
+        <TableContainer component={Paper} style={{ marginTop: '20px', marginBottom: '20px' }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ backgroundColor: '#f2f2f2', padding: '10px', border: '1px solid #ddd', textAlign: 'center' }}>Order ID</TableCell>
+                <TableCell style={{ backgroundColor: '#f2f2f2', padding: '10px', border: '1px solid #ddd', textAlign: 'center' }}>Customer</TableCell>
+                <TableCell style={{ backgroundColor: '#f2f2f2', padding: '10px', border: '1px solid #ddd', textAlign: 'center' }}>Status</TableCell>
+                <TableCell style={{ backgroundColor: '#f2f2f2', padding: '10px', border: '1px solid #ddd', textAlign: 'center' }}>Order Received</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredOrders.map((order) => (
+                <TableRow key={order._id}>
+                  <TableCell style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center' }}>{order._id}</TableCell>
+                  <TableCell style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center' }}>{order.userId.name}</TableCell>
+                  <TableCell style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center' }}>
+                    <TextField
+                      select
+                      label="Order Status" 
+                      variant="outlined"
+                      value={order.status}
+                      onChange={(e) => handleOrderStatusChange(e.target.value, order._id)}
+                      sx={{ minWidth: "180px", fontSize: { xs: "12px", md: "16px" }, backgroundColor: "white" }}
+                      InputProps={{
+                        sx: { backgroundColor: 'white' },
+                      }}
+                    >
+                      <InputLabel htmlFor="order-status-label">Order Status</InputLabel>
+                      <MenuItem value="Confirmed">Confirmed</MenuItem>
+                      <MenuItem value="Prepared">Prepared</MenuItem>
+                      <MenuItem value="Delivered">Delivered</MenuItem>
+                    </TextField>
+                  </TableCell>
+                  <TableCell style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center' }}>
+                    {new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredOrders.map((order) => (
-                  <TableRow key={order._id}>
-                    <TableCell style={styles.tableCell}>{order._id}</TableCell>
-                    <TableCell style={styles.tableCell}>{order.userId.name}</TableCell>
-                    <TableCell style={styles.tableCell}>
-                      <TextField
-                        select
-                        id="outlined-basic"
-                        label="Order Status"
-                        variant="outlined"
-                        value={order.status}
-                        onChange={(e) => handleOrderStatusChange(e.target.value, order._id)}
-                        sx={{ minWidth: "180px", fontSize: { xs: "12px", md: "16px" } }}
-                      >
-                        <InputLabel htmlFor="order-status-label">Order Status</InputLabel>
-                        <MenuItem value="Confirmed">Confirmed</MenuItem>
-                        <MenuItem value="Prepared">Prepared</MenuItem>
-                        <MenuItem value="Delivered">Delivered</MenuItem>
-                      </TextField>
-                    </TableCell>
-                    <TableCell style={styles.tableCell}>
-                      {new Date(order.createdAt).toLocaleString()}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
       ) : (
-        <p>No orders available</p>
+        <h3 style={{ textAlign: "center"}}>No orders available</h3>
       )}
      
     </div>

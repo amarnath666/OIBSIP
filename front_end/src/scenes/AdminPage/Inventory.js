@@ -28,9 +28,9 @@ const Inventory = ({ ingredient }) => {
 
   return (
     <div style={{ textAlign: "center"}}>
-      <h2>{`${ingredient.toUpperCase()} STOCK`}</h2>
+      <h3>{`${ingredient.toUpperCase()} STOCK`}</h3>
       <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', margin: "auto" }}>
-        <thead style={{ backgroundColor: '#f2f2f2' }}>
+        <thead style={{ backgroundColor: '#f2f2f2'}}>
           <tr>
             <th style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'left', width: "50%" }}>Name</th>
             <th style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'left', width: "50%" }}>Quantity</th>

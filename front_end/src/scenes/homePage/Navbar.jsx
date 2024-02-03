@@ -98,19 +98,20 @@ const NavBar = () => {
     )}
     {!isAuthenticated && isAdmin && (
         <>
-            <ListItem Button onClick={handleLogout}>
+           
+            {location.pathname === "/inventory" && (
+            <ListItem button component={Link} to="/admin">
+            <ListItemText primary="Orders" />
+            </ListItem>
+            )}
+            {location.pathname === "/admin" && (
+                <ListItem button component={Link} to="/inventory">
+                <ListItemText primary="Inventory" />
+                </ListItem>
+            )}   
+             <ListItem Button onClick={handleLogout}>
                 <ListItemText primary="Logout" />
             </ListItem>
-            {location.pathname === "/admin" && (
-                <ListItem Button >
-                <ListItemText primary="Orders" component={Link} to="/admin"/>
-            </ListItem>
-            )}
-             {location.pathname === "/inventory" && (
-                <ListItem Button >
-                <ListItemText primary="Inventory" />
-            </ListItem>
-            )}
         </>
     )}
 </List>

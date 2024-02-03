@@ -9,9 +9,11 @@ const icons = [faClock, faBoxOpen, faTruck, faCheck];
 const steps = ['Order Placed', 'Preparation', 'Out for Delivery', 'Delivered'];
 
 const OrderStatus = () => {
-  const isNonMobileScreens = useMediaQuery("(min-width: 500px)"); // Use min-width to target non-mobile screens
+  const isNonMobileScreens = useMediaQuery("(min-width: 500px)"); 
+  const notMobileScreens = useMediaQuery("(min-width:100px )")
   const { orderId } = useParams();
   const [orderStatus, setOrderStatus] = useState(null);
+  const [orderTime, setOrderTime] = useState(null);
 
   const updateOrderStatus = async () => {
     try {
@@ -27,10 +29,14 @@ const OrderStatus = () => {
         throw new Error(`Failed to update order status: ${errorMessage}`);
       }
 
-      const updatedOrder = await response.json();
-      console.log('Updated Order:', updatedOrder);
+      const { status, updatedAt } = await response.json();
+      console.log('Updated Order:', { status, updatedAt });
 
-      setOrderStatus(updatedOrder.status);
+      if (status !== orderStatus) {
+        // Only update the time if the status changes
+        setOrderStatus(status);
+        setOrderTime(updatedAt);
+      }
     } catch (error) {
       console.error('Error:', error.message);
       alert(`Error: ${error.message}`);
@@ -43,7 +49,7 @@ const OrderStatus = () => {
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, [orderId]);
+  }, [orderId, orderStatus]); // Add orderStatus to the dependency array
 
   return (
     <>
@@ -51,21 +57,18 @@ const OrderStatus = () => {
       <Typography
         variant="h4"
         style={{
-          fontSize: isNonMobileScreens ? '3rem' : '2rem',
+          fontSize: isNonMobileScreens ? '2.2rem' : '2rem',
           marginTop: '3rem',
           marginBottom: '1rem',
-          marginLeft: isNonMobileScreens ? '5rem' : '2rem',
-          color: "#463E3F"
+          marginLeft: isNonMobileScreens ? '5rem' : '1rem',
+          color: "blue",
+          fontWeight: isNonMobileScreens ? '900' : '700',
         }}
       >
         Track Order Status
       </Typography>
-      <Box textAlign="center">
-        <Stepper
-          activeStep={icons.indexOf(orderStatus)}
-          orientation="vertical"
-          style={{ marginLeft: isNonMobileScreens ? '5rem' : '2rem' }}
-        >
+      <Box textAlign="center" sx={{ marginLeft: isNonMobileScreens ? '5rem' : '1rem' }}>
+        <Stepper activeStep={icons.indexOf(orderStatus)} orientation="vertical">
           {steps.map((label, index) => (
             <Step key={index}>
               <div
@@ -90,7 +93,6 @@ const OrderStatus = () => {
                             ? '#1976D2'
                             : 'grey'
                           : '#463E3F',
-                        
                     }}
                   />
                 </div>
@@ -98,7 +100,7 @@ const OrderStatus = () => {
                   <Typography
                     variant="body1"
                     style={{
-                      fontSize: isNonMobileScreens ? '2rem' : '1.5rem',
+                      fontSize: '1.5rem',
                       color:
                         index <= steps.indexOf(orderStatus)
                           ? index === steps.indexOf(orderStatus)
@@ -110,6 +112,28 @@ const OrderStatus = () => {
                     {label}
                   </Typography>
                 </div>
+                {/* Displaying the time */}
+                {index === steps.indexOf(orderStatus) && (
+                  <div
+                    style={{
+                      marginLeft: isNonMobileScreens ? "65px" : "50px",
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <div style={{ marginRight: isNonMobileScreens ? '1rem': "0.5rem"}}>
+                      <FontAwesomeIcon icon={faClock} style={{ fontSize: isNonMobileScreens ? '1.3rem' : "1rem", color: 'grey' }} />
+                    </div>
+                    <div>
+                      <Typography variant="body1" style={{ fontSize: isNonMobileScreens ? '1.3rem': "1rem", color: 'grey' }}>
+                        {new Date(orderTime).toLocaleString(undefined, {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </Typography>
+                    </div>
+                  </div>
+                )}
               </div>
             </Step>
           ))}
