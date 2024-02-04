@@ -6,7 +6,7 @@ const InventoryPage = () => {
         <>
             <NavBar />
             <div style={{ textAlign: "center"}}>
-            <h1  style={{ color: "blue"}}>Mini Inventory</h1>
+            <h1  style={{ color: "#1976d2"}}>Mini Inventory</h1>
             </div>
             <hr />
 

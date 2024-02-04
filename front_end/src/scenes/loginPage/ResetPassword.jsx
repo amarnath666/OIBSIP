@@ -60,12 +60,12 @@ const ResetPassword = () => {
                 <LockIcon fontSize="medium" style={{ backgroundColor: '#1976D2', color: '#fff', padding: '10px', borderRadius: '50%' }} />
               </Grid>
               <Grid item>
-                <Typography variant="h5" textAlign="center" fontWeight="700" color="blue">
+                <Typography variant="h5" textAlign="center" fontWeight="700" color="#1976d2">
                   Reset Password
                 </Typography>
               </Grid>
             </Grid>
-                        <Typography color= "green">OTP has been sent to your email. Please check your mail.</Typography>
+                        <Typography color= "primary">OTP has been sent to your email. Please check your mail.</Typography>
                         <form onSubmit={handleSubmit}>
                             <TextField
                                 fullWidth

@@ -70,7 +70,7 @@ const OrderStatus = () => {
           marginTop: '3rem',
           marginBottom: '1rem',
           marginLeft: isNonMobileScreens ? '5rem' : '1rem',
-          color: "blue",
+          color: "#1976d2",
           fontWeight: isNonMobileScreens ? '900' : '700',
         }}
       >

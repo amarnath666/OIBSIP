@@ -70,7 +70,7 @@ const RegistrationForm = () => {
                 <LockIcon fontSize="medium" style={{ backgroundColor: '#1976D2', color: '#fff', padding: '10px', borderRadius: '50%' }} />
               </Grid>
               <Grid item>
-                <Typography variant="h5" textAlign="center" fontWeight="700" color="blue">
+                <Typography variant="h5" textAlign="center" fontWeight="700" color="#1976d2">
                   Registration
                 </Typography>
               </Grid>

@@ -118,7 +118,7 @@ const Admin = () => {
   return (
     <div>
       <NavBar />
-        <h1 style={{ textAlign: "center", color: "blue" }}>Admin Dashboard</h1>
+        <h1 style={{ textAlign: "center", color: "#1976d2" }}>Admin Dashboard</h1>
         <hr />
       {filteredOrders === undefined ? (
         <p>Loading...</p>

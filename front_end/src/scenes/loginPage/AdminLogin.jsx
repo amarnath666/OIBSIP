@@ -66,7 +66,7 @@ const AdminLogin = () => {
               </Grid>
               <Grid item>
                 {/* Title for the admin login */}
-                <Typography variant="h5" textAlign="center" fontWeight="700" color="blue">
+                <Typography variant="h5" textAlign="center" fontWeight="700" color="#1976d2">
                   Admin login
                 </Typography>
               </Grid>
