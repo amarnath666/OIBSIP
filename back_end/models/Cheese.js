@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Define the Cheese schema
 const cheeseSchema = new mongoose.Schema({
     name: { 
         type: String,
@@ -8,7 +9,7 @@ const cheeseSchema = new mongoose.Schema({
       quantity: { 
         type: Number, 
         required: true, 
-        default: 30
+        default: 20
       },
       img: {
         type: String,  
@@ -17,6 +18,7 @@ const cheeseSchema = new mongoose.Schema({
       { timestamps: true}
       );
 
+// Create the Cheese model using the schema
 const Cheese = mongoose.model('Cheese', cheeseSchema);
 
 export default Cheese;

@@ -29,7 +29,7 @@ export const cheeseOptions = [
 export const veggieOptions = [
   { name: 'Tomatoes', description: 'Add a burst of freshness with sliced tomatoes.', img: 'https://media.post.rvohealth.io/wp-content/uploads/2020/09/AN313-Tomatoes-732x549-Thumb.jpg' },
   { name: 'Mushrooms', description: 'Elevate your pizza with sliced mushrooms.', img: 'https://hips.hearstapps.com/hmg-prod/images/how-to-grow-mushrooms-1663951554.jpg?crop=0.668xw:1.00xh;0.167xw,0&resize=1200:*' },
-  { name: 'Bell Peppers', description: 'Infuse color and crunch with colorful bell peppers.', img: 'https://www.narayanahealth.org/blog/wp-content/uploads/2022/04/NH-Social-Media-Health-Nuggets-14-1.jpg' },
+  { name: 'Bell Peppers', description: 'Infuse color and crunch with colorful bell peppers.', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQx2TJRIyQeC2fcyD5o71uYyZXhX4zIFZ2KuIgVu7CIHw&s' },
   { name: 'Onions', description: 'Enhance the savory profile with sliced onions.', img: 'https://spiceworldinc.com/wp-content/uploads/2022/06/SW-Onion-Health-Hero.jpg' },
   { name: 'Spinach', description: 'Incorporate the goodness of fresh spinach leaves.', img: 'https://images.immediate.co.uk/production/volatile/sites/30/2013/06/GettyImages-652986635-3dffa4d.jpg?quality=90&resize=556,505' },
 ];

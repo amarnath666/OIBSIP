@@ -25,12 +25,16 @@ const PizzaOptions = () => {
     veggieOptions,
     selectedOptions,
   } = useSelector((state) => state.auth);
+
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
+    // Fetch pizza options on component mount
     const fetchOptions = async () => {
       try {
+        // Dispatch action to fetch pizza options
         const options = await dispatch(fetchPizzaOptions());
+        // Dispatch action to set pizza options in the state
         dispatch(setPizzaOptions(options));
       } catch (error) {
         console.error('Error fetching pizza options:', error);
@@ -44,6 +48,7 @@ const PizzaOptions = () => {
     return <div>Loading...</div>;
   }
 
+  // Function to handle selecting an option from each category
   const handleOptionSelect = (optionType, option) => {
     switch (optionType) {
       case 'base':
@@ -63,6 +68,7 @@ const PizzaOptions = () => {
     }
   };
 
+  // Function to render options for a specific category
   const renderOptions = (options, optionType, selectedOption, categoryText) => (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '0.5rem' }}>
       <Typography variant="h4" style={{ marginBottom: '0.5rem', fontWeight: '700' }}>
@@ -100,6 +106,7 @@ const PizzaOptions = () => {
     </div>
   );
 
+  // Function to handle customizing pizza
   const customizedPizza = () => {
     if (selectedOptions.base && selectedOptions.sauce && selectedOptions.cheese && selectedOptions.veggie) {
       if (isAuthenticated) {
@@ -128,7 +135,7 @@ const PizzaOptions = () => {
     <div style={{ textAlign: 'center' }}>
       <hr style={{ width: '100%', margin: '20px auto' }} />
 
-      <Typography variant="h3" style={{ marginBottom: '1.5rem', fontWeight: '700' }}>
+      <Typography variant="h3" style={{ marginBottom: '1.5rem', fontWeight: '700', color: "blue" }}>
         Customize Pizza
       </Typography>
 

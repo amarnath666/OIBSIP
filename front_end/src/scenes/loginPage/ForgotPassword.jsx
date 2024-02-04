@@ -12,12 +12,14 @@ const ForgotPasswordForm = () => {
     });
     const [resetPasswordError, setResetPasswordError] = useState('');
     const [resetPasswordSuccess, setResetPasswordSuccess] = useState('');
-    const [loading, setLoading] = useState(false); // New loading state
+    const [loading, setLoading] = useState(false); 
 
+    // Function to handle form input changes
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // Function to handle reset password
     const handleResetPassword = async (e) => {
         e.preventDefault();
 
@@ -45,6 +47,8 @@ const ForgotPasswordForm = () => {
     return (
         <div>
             <NavBar />
+
+             {/* Main content of the forgot password form */}
             <Grid container justifyContent="center" alignItems="center" style={{ height: '80vh' }}>
                 <Grid item xs={10} sm={8} md={6} lg={4}>
                     <Paper elevation={0} style={{ padding: '20px' }}>
@@ -58,6 +62,8 @@ const ForgotPasswordForm = () => {
                             </Typography>
                         </Grid>
                     </Grid>
+
+                        {/* Form for resetting password */}
                         <form onSubmit={handleResetPassword}>
                             <TextField
                                 fullWidth

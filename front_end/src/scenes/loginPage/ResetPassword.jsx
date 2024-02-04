@@ -10,6 +10,7 @@ const ResetPassword = () => {
     const navigate = useNavigate();
     const params = useParams();
 
+    // State to manage form data and error messages
     const [formData, setFormData] = useState({
         email: params.email || '',
         resetOTP: '',
@@ -17,10 +18,12 @@ const ResetPassword = () => {
     });
     const [resetError, setResetError] = useState('');
 
+    // Function to handle changes in form fields
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // Function to handle form submission for password reset
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -47,6 +50,8 @@ const ResetPassword = () => {
     return (
         <div>
             <NavBar />
+
+            {/* Main content of password reset form */}
             <Grid container justifyContent="center" alignItems="center" style={{ height: '80vh' }}>
                 <Grid item xs={10} sm={8} md={6} lg={4}>
                     <Paper elevation={0} style={{ padding: '20px' }}>

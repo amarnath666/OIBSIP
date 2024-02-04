@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 
 const sendResetMail = async (email, text) => {
     try {
+        // Create a nodemailer transporter using Gmail service
         const transporter = nodemailer.createTransport({
             service: "Gmail",
             auth: {
@@ -10,14 +11,13 @@ const sendResetMail = async (email, text) => {
             },
         });
 
-        // SEND EMAIL
+        // Compose and send the email
         let info = await transporter.sendMail({
             from: process.env.ADMIN_EMAIL,
             to: email,
-            subject: "One-Time Password (OTP)", // Fix typo here
-            text: text, // Use the provided OTP text
+            subject: "One-Time Password (OTP)", 
+            text: text,
         });
-        console.log("Reset password email sent successfully");
     } catch (error) {
         console.error("Reset password email failed to send:", error);
     }

@@ -5,12 +5,14 @@ import { setPizzaVarieties } from "scenes/state/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 const PizzaList = () => {
+  // Fetching pizza varieties and authentication state from the Redux store
   const { pizzaVarieties } = useSelector((state) => state.auth);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
   const isSmallScreen = useMediaQuery("(max-width: 620px)");
 
   useEffect(() => {
+    // Fetch pizza varieties data from the server if the user is authenticated
     const fetchData = async () => {
       try {
         // Check if the user is authenticated before making the request
@@ -46,7 +48,6 @@ const PizzaList = () => {
             maxWidth={isSmallScreen ? "305px" : "270px"}
             margin="16px"
           >
-            {/* Assuming `PizzaCard` is a separate component */}
             <PizzaCard pizza={pizza} />
           </Box>
         ))}

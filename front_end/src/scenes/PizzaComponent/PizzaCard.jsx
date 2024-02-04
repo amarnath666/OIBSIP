@@ -7,25 +7,25 @@ const PizzaCard = ({ pizza }) => {
   const [isTokenFetched, setIsTokenFetched] = useState(false);
   const authToken = useSelector((state) => state.auth.token);
 
+  // Effect to check if the authToken is available and set isTokenFetched to true accordingly
   useEffect(() => {
-    // Check if the authToken is available and set isTokenFetched to true accordingly
     if (authToken) {
       setIsTokenFetched(true);
       console.log('Auth Token Fetched:', authToken);
     }
   }, [authToken, setIsTokenFetched]);
 
+  // Function to handle the "Buy Now" button click
   const handleBuyNowClick = async () => {
     try {
-      console.log('Buy Now button clicked');
   
+      // Check if the authToken is fetched yet
       if (!isTokenFetched) {
         console.log('Token not fetched yet');
         return;
       }
   
-      console.log('Auth Token:', authToken);
-  
+      // Make a fetch request to the server for payment processing
       const response = await fetch("http://localhost:3001/payment/check-out", {
         method: "POST",
         headers: {
@@ -33,7 +33,6 @@ const PizzaCard = ({ pizza }) => {
         },
         body: JSON.stringify({
           amount: pizza.price,
-          // include other necessary details here
         }),
       });
   
@@ -41,15 +40,16 @@ const PizzaCard = ({ pizza }) => {
   
       if (!response.ok) {
         console.error('Fetch error:', response.statusText);
-        // Handle the error appropriately
         return;
       }
   
+      // Parse the response to get the Razorpay order details
       const order = await response.json();
       console.log("Razorpay Order Response:", order);
   
+      // Options for the Razorpay payment
       const options = {
-        key: 'rzp_test_ciEkAemCSllnO9',
+        key: "rzp_test_ciEkAemCSllnO9",
         currency: "INR",
         name: "Pizzify",
         description: pizza.description,
@@ -79,6 +79,7 @@ const PizzaCard = ({ pizza }) => {
         },
       };
 
+      // Open the Razorpay payment dialog
       if (window.Razorpay) {
         const rzp = new window.Razorpay(options);
         rzp.open();
@@ -95,7 +96,8 @@ const PizzaCard = ({ pizza }) => {
       sx={{
         marginTop: "0.2rem",
         transition: "transform 0.3s, box-shadow 0.3s",
-        "&:hover": { transform: "scale(1.05)", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" },
+        "&:hover": { transform: "scale(1.05)", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+       },
       }}
     >
       <CardMedia
@@ -107,7 +109,7 @@ const PizzaCard = ({ pizza }) => {
         style={{
           objectFit: "cover",
           transition: "transform 0.3s",
-          "&:hover": { transform: "scale(1.1)" },
+          "&:hover": { transform: "scale(1.1)" },         
         }}
       />
       <CardContent>
@@ -124,8 +126,8 @@ const PizzaCard = ({ pizza }) => {
             color="primary"
             onClick={handleBuyNowClick}
             sx={{
-              "&:hover": { backgroundColor: "#388e3c" },
-              "&:active": { boxShadow: "none", backgroundColor: "#1e4e5d" },
+              "&:hover": { backgroundColor: "blue" },
+              "&:active": { boxShadow: "none", backgroundColor: "blue" },
             }}
           >
             Buy Now

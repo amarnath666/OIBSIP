@@ -3,7 +3,6 @@ import Base from '../models/Base.js';
 import Cheese from '../models/Cheese.js';
 import Sauce from '../models/Sauce.js';
 import Veggie from '../models/Veggie.js';
-import nodemailer from 'nodemailer';
 import sendLowStockEmail from "../utils/stockEmail.js";
 
 export const getOrders = async (req, res) => {
@@ -45,8 +44,6 @@ export const updateStock = async (options) => {
     const updatedSauce = await Sauce.findOneAndUpdate({ name: sauce }, { $inc: { quantity: -1 } }, { new: true });
     const updatedVeggie = await Veggie.findOneAndUpdate({ name: veggie }, { $inc: { quantity: -1 } }, { new: true });
 
-    console.log('Stock updated ');
-
     if (updatedBase.quantity < 20 || updatedCheese.quantity < 20 || updatedSauce.quantity < 20 || updatedVeggie.quantity < 20) {
       await sendLowStockEmail();
     }
@@ -54,5 +51,4 @@ export const updateStock = async (options) => {
     console.error('Error updating stock:', error);
   }
 };
-
 

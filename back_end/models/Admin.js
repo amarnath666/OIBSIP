@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+// Define the Admin schema
 const adminSchema = new mongoose.Schema({
   adminId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -7,12 +8,12 @@ const adminSchema = new mongoose.Schema({
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User', 
     required: true,
   },
   orderId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Order",
+    ref: "Order", 
     required: true,
   },
   status: {
@@ -21,17 +22,18 @@ const adminSchema = new mongoose.Schema({
     default: 'Order Received',
   },
 }, {
-  timestamps: true, // Add timestamps to the schema
+  timestamps: true, 
 });
 
+// Define a post hook for findOneAndUpdate middleware
 adminSchema.post('findOneAndUpdate', async function (doc) {
-  console.log('Doc in findOneAndUpdate middleware:', doc);
 
   // Check if status is modified
   if (this._update.$set && this._update.$set.status) {
     try {
       let statusToUpdate;
 
+      // Map the status to the corresponding update status
       switch (this._update.$set.status) {
         case 'Confirmed':
           statusToUpdate = 'Preparation';
@@ -46,9 +48,6 @@ adminSchema.post('findOneAndUpdate', async function (doc) {
           statusToUpdate = 'Order Placed';
       }
 
-      console.log('OrderStatus to update:', this._update.$set.status);
-      console.log('Updated orderStatus in Admin:', statusToUpdate);
-
       // Update the Order document first
       await mongoose.model('Order').updateOne(
         { _id: doc.orderId },
@@ -61,6 +60,7 @@ adminSchema.post('findOneAndUpdate', async function (doc) {
   }
 });
 
+// Create the Admin model using the schema
 const Admin = mongoose.model('Admin', adminSchema);
 
 export default Admin;

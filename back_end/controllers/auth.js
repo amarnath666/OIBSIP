@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import verifyMail from "../utils/verifyMail.js";
 import sendResetMail from "../utils/sendResetMail.js";
-import generateToken from "../utils/jwtUtils.js";
+import generateToken from "../utils/generateToken.js";
 
 // Register a new user
 export const register = async (req, res) => {
@@ -27,7 +27,7 @@ export const register = async (req, res) => {
       password: await bcrypt.hash(req.body.password, 10),
       otp: Math.floor(100000 + Math.random() * 900000).toString(),
       otpExpiration: Date.now() + 300000, // OTP expiration time (5 minutes)
-      verified: false, // Set initial verification status to false
+      verified: false, 
     });
 
     await user.save();
@@ -58,18 +58,12 @@ export const confirmOtp = async (req, res) => {
 
   try {
     // Find the user in the database
-    const { email } = req.query;
     const user = await User.findOne({ email });
 
     // Check if the user exists
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-
-    // Log OTP-related details for debugging
-    console.log('Stored OTP:', user.otp);
-    console.log('Entered OTP:', enteredOTP);
-    console.log('OTP Expiration:', user.otpExpiration);
 
     // Check if the OTP is valid
     if (user.otp === enteredOTP && user.otpExpiration instanceof Date && user.otpExpiration > Date.now()) {
@@ -88,7 +82,6 @@ export const confirmOtp = async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
 
 // User login
 export const login = async (email, password) => {
@@ -156,16 +149,9 @@ export const resetPassword = async (req, res) => {
       resetOTPExpiration: { $gt: Date.now() },
     });
 
-    // Log user found in the database
-    console.log('User found in the database:', user);
-
     if (!user) {
       return res.status(400).json({ error: "User not found" });
     }
-
-    // Log current time and OTP Expiration from the user
-    console.log('Current time:', Date.now());
-    console.log('OTP Expiration from the user:', user.resetOTPExpiration);
 
     // Reset password
     user.password = await bcrypt.hash(password, 10);

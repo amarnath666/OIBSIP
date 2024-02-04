@@ -1,10 +1,9 @@
 import express from "express";
 import { register, login, confirmOtp, forgotPassword, resetPassword, logout, adminLogin} from "../controllers/auth.js";
-import generateToken from "../utils/jwtUtils.js";
 
 const router = express.Router();
 
-router.post("/register", register);
+// Route for user login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -24,9 +23,8 @@ router.post('/login', async (req, res) => {
   }
 });
 
-
-
-router.post("/confirm-otp",  confirmOtp);
+router.post("/register", register);
+router.post("/confirm-otp/:email",  confirmOtp);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:email", resetPassword);
 router.post("/admin-login", adminLogin);

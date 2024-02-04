@@ -1,7 +1,9 @@
 import nodemailer from 'nodemailer';
 
+// Function to send a verification email with a one-time password (OTP)
 const verifyMail = async(email, text) => {
   try {
+     // Create a nodemailer transporter
     let transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
@@ -17,8 +19,6 @@ const verifyMail = async(email, text) => {
       subject: "One-Time Password (OTP)",
       text: text, // Use the provided OTP text
     });
-
-    console.log("Mail sent successfully");
   } catch(error) {
     console.error("Mail failed to send:", error);
   }

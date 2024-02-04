@@ -58,6 +58,7 @@ const generateAllCombinations = () => {
   return allCombinations;
 };
 
+// Generate all possible pizza combinations
 const allPizzas = generateAllCombinations();
 
 // Find the selected pizza in the array
@@ -69,16 +70,13 @@ const customizedPizza = allPizzas.find(
     pizza.veggie === veggie.name
 );
 
+// Function to handle the Buy Now button click for customized pizza
 const handleBuyNowClickCustomized = async () => {
   try {
-      console.log('Buy Now button clicked');
   
       if (!isTokenFetched) {
-        console.log('Token not fetched yet');
         return;
       }
-  
-      console.log('Auth Token:', authToken);
 
     const response = await fetch("http://localhost:3001/payment/check-out", {
       method: "POST",
@@ -94,7 +92,7 @@ const handleBuyNowClickCustomized = async () => {
     console.log("Razorpay Order Response:", order);
 
     const options = {
-      key: 'rzp_test_ciEkAemCSllnO9',
+      key: "rzp_test_ciEkAemCSllnO9",
       currency: "INR",
       name: "Pizzify",
       image: baseImages[base.name],
@@ -126,8 +124,6 @@ const handleBuyNowClickCustomized = async () => {
 
         const verificationResult = await verificationResponse.json();
         console.log("Payment Verification Response:", verificationResult);
-
-        // Handle the result as needed
       },
     };
 
@@ -142,6 +138,7 @@ const handleBuyNowClickCustomized = async () => {
   }
 };
 
+  // Return UI based on whether the customized pizza is found
   if (!customizedPizza) {
     return (
       <div style={{ textAlign: 'center', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -190,8 +187,8 @@ const handleBuyNowClickCustomized = async () => {
                 style={{ width: '100%', maxWidth: '45%', fontWeight: "500" }}
                 onClick={handleBuyNowClickCustomized}
                 sx={{
-                  "&:hover": { backgroundColor: "#388e3c" },
-                  "&:active": { boxShadow: "none", backgroundColor: "#1e4e5d" },
+                  "&:hover": { backgroundColor: "blue" },
+                  "&:active": { boxShadow: "none", backgroundColor: "blue" },
                 }}
               >
                 Buy Now

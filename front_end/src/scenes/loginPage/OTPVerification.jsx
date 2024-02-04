@@ -7,7 +7,6 @@ import NavBar from 'scenes/homePage/Navbar';
 
 const OTPVerification = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const params = useParams();  // Use useParams to get URL parameters
   const [formData, setFormData] = useState({
     email: params.email || '',  // Use email from URL params
@@ -15,20 +14,18 @@ const OTPVerification = () => {
   });
   const [verificationMessage, setVerificationMessage] = useState('');
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const email = searchParams.get('email');
-    setFormData({ ...formData, email: email || '' });
-  }, [location, params.email]);  // Include params.email in the dependency array
-
+  // Function to handle changes in form fields
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  // Function to handle OTP verification submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3001/auth/confirm-otp', formData);
+      // Make a request to the server to confirm OTP
+      const response = await axios.post(`http://localhost:3001/auth/confirm-otp/${formData.email}`, formData);
 
       if (response.status === 200) {
         setVerificationMessage('OTP verified successfully.');
@@ -46,6 +43,7 @@ const OTPVerification = () => {
     <Grid>
       <NavBar />
 
+    {/* Main content of OTP verification */}
     <Grid container justifyContent="center" alignItems="center" style={{ height: '80vh' }}>
       <Grid item xs={10} sm={8} md={6} lg={4}>
         <Paper elevation={0} style={{ padding: '20px' }}>
@@ -59,10 +57,15 @@ const OTPVerification = () => {
                 </Typography>
               </Grid>
             </Grid>
+
+          {/* Instructional message for OTP sent to email */}
           <Typography>OTP has been sent to your email. Please check your mail.</Typography>
+
+          {/* Display verification message if any */}
           {verificationMessage && <Typography color="success">{verificationMessage}</Typography>}
+
+          {/* Form for OTP entry and submission */}
           <form onSubmit={handleSubmit}>
-            {/* Remove the email input field */}
             <TextField fullWidth label="OTP" name="enteredOTP" onChange={handleChange} margin="normal" required />
             {/* Use the correct field name here */}
             <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: '10px' }}>

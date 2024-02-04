@@ -14,9 +14,8 @@ import {
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { updateOrderStatus } from 'scenes/state/authSlice';
-import Inventory from './Inventory';
-import { textAlign } from '@mui/system';
 
+// Custom styles for the component
 const styles = {
   tableContainer: {
     marginTop: '20px',
@@ -60,6 +59,7 @@ const Admin = () => {
   const [orderStatus, setOrderStatus] = useState({});
   const dispatch = useDispatch();
 
+  // Function to fetch all orders from the server
   const fetchAllOrders = async () => {
     try {
       const response = await fetch('http://localhost:3001/order/getorders');
@@ -74,10 +74,12 @@ const Admin = () => {
     }
   };
 
+  // Function to poll for the latest order information
   const pollForLatestOrderInfo = () => {
     fetchAllOrders();
   };
 
+  // Function to handle the change in order status
   const handleOrderStatusChange = async (newStatus, orderId) => {
     try {
       // Update the local state (UI) immediately
@@ -100,6 +102,7 @@ const Admin = () => {
     }
   };
 
+  // Fetch all orders once on component mount
   useEffect(() => {
     fetchAllOrders();
   }, []);
@@ -107,20 +110,21 @@ const Admin = () => {
   // Polling every 5 seconds (5000 milliseconds)
   useInterval(() => {
     pollForLatestOrderInfo();
-  }, 5000);
+  }, 1000);
 
+  // Filter orders to exclude those with status "Delivered" from Admin Dashboard
   const filteredOrders = orders.filter(order => order.status !== "Delivered");
 
   return (
     <div>
       <NavBar />
-        <h1 style={{ textAlign: "center"}}>Admin Dashboard</h1>
+        <h1 style={{ textAlign: "center", color: "blue" }}>Admin Dashboard</h1>
         <hr />
       {filteredOrders === undefined ? (
         <p>Loading...</p>
       ) : filteredOrders.length > 0 ? (
         <div>
-        <h3 style={{ textAlign: "center" }}>All Orders</h3>
+        <h3 style={{ textAlign: "center", color: "#42a5f5" }}>All Orders</h3>
         <TableContainer component={Paper} style={{ marginTop: '20px', marginBottom: '20px' }}>
           <Table>
             <TableHead>

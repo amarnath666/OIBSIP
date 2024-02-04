@@ -5,10 +5,11 @@ import axios from 'axios';
 import NavBar from 'scenes/homePage/Navbar';
 import LockIcon from '@mui/icons-material/Lock';
 
+// Common style for the form paper
 const commonFormStyle = {
   padding: '20px',
   marginTop: '1rem',
-  boxShadow: 'none', // Added to remove card effect
+  boxShadow: 'none', 
 };
 
 const RegistrationForm = () => {
@@ -22,16 +23,20 @@ const RegistrationForm = () => {
   const [loading, setLoading] = useState(false);
   const [registrationError, setRegistrationError] = useState('');
 
+  // Function to handle changes in form fields
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Function to handle registration form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      // Set loading to true while waiting for the server response
       setLoading(true);
 
+      // Make a request to the server for registration
       const response = await axios.post('http://localhost:3001/auth/register', formData);
 
       // Inform the user to wait for OTP
@@ -54,9 +59,11 @@ const RegistrationForm = () => {
   return (
     <div>
       <NavBar />
+
+      {/* Main content of registration form */}
       <Grid container justifyContent="center" alignItems="center" style={{ height: '80vh' }}>
         <Grid item xs={10} sm={8} md={6} lg={4}>
-          {/* Removed the elevation prop */}
+          {/* Paper component for the registration form */}
           <Paper style={commonFormStyle}>
             <Grid container justifyContent="center" alignItems="center" direction="column" spacing={1}>
               <Grid item>
@@ -68,6 +75,8 @@ const RegistrationForm = () => {
                 </Typography>
               </Grid>
             </Grid>
+
+            {/* Display loading spinner and message while waiting for OTP */}
             {loading && (
               <React.Fragment>
                 <CircularProgress style={{ marginBottom: '10px' }} />
@@ -75,11 +84,16 @@ const RegistrationForm = () => {
               </React.Fragment>
             )}
             {registrationError && <Typography color="error">{registrationError}</Typography>}
+
+            {/* Form for user registration */}
             <form onSubmit={handleSubmit}>
+              {/* Text fields for user details */}
               <TextField fullWidth label="Name" name="name" onChange={handleChange} margin="normal" required />
               <TextField fullWidth label="Location" name="location" onChange={handleChange} margin="normal" required />
               <TextField fullWidth type="email" label="Email" name="email" onChange={handleChange} margin="normal" required />
               <TextField fullWidth type="password" label="Password" name="password" onChange={handleChange} margin="normal" required />
+
+              {/* Submit button for user registration */}
               <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }} fullWidth>
                 Register
               </Button>

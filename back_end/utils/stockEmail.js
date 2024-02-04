@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 
+// Function to create and return a nodemailer transporter
 const createTransporter = () => {
   return nodemailer.createTransport({
     service: 'Gmail',
@@ -10,9 +11,10 @@ const createTransporter = () => {
   });
 };
 
+// Function to send a low stock alert email
 const sendLowStockEmail = async () => {
   return new Promise(async (resolve, reject) => {
-    const transporter = createTransporter();
+    const transporter = createTransporter();  // Create a nodemailer transporter
 
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
@@ -23,11 +25,10 @@ const sendLowStockEmail = async () => {
 
     try {
       await transporter.sendMail(mailOptions);
-      console.log('Email sent successfully');
       resolve(); // Resolve the promise after sending email successfully
     } catch (error) {
       console.error('Error sending email:', error);
-      reject(error); // Reject the promise if there is an error
+      reject(error); 
     }
   });
 };

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Define the User schema
 const userSchema = mongoose.Schema({
     name: {
         type: String,
@@ -22,7 +23,7 @@ const userSchema = mongoose.Schema({
         type: String
     },
     otpExpiration: {
-        type: Date  // Corrected to Date
+        type: Date  
     },
     verified: {
         type: Boolean,
@@ -43,6 +44,7 @@ const userSchema = mongoose.Schema({
 },  { timestamps: true }
 );
 
+// Create the User model using the schema
 const User = mongoose.model("User", userSchema );
 
 export default User;

@@ -3,18 +3,24 @@ import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faClock, faTruck, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import NavBar from 'scenes/homePage/Navbar';
-import { Divider, Stepper, Step, StepLabel, Typography, Box, useMediaQuery } from '@mui/material';
+import { Stepper, Step, StepLabel, Typography, Box, useMediaQuery } from '@mui/material';
 
+// Icons for different order statuses
 const icons = [faClock, faBoxOpen, faTruck, faCheck];
+
+// Order status steps
 const steps = ['Order Placed', 'Preparation', 'Out for Delivery', 'Delivered'];
 
 const OrderStatus = () => {
+  // Media queries for responsive design
   const isNonMobileScreens = useMediaQuery("(min-width: 500px)"); 
   const notMobileScreens = useMediaQuery("(min-width:100px )")
   const { orderId } = useParams();
+  // State to manage order status and time
   const [orderStatus, setOrderStatus] = useState(null);
   const [orderTime, setOrderTime] = useState(null);
 
+  // Function to update order status
   const updateOrderStatus = async () => {
     try {
       const response = await fetch(`http://localhost:3001/order/orderstatus/${orderId}`, {
@@ -44,16 +50,19 @@ const OrderStatus = () => {
   };
 
   useEffect(() => {
+    // Set up interval to periodically update order status
     const intervalId = setInterval(() => {
       updateOrderStatus();
-    }, 5000);
+    }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [orderId, orderStatus]); // Add orderStatus to the dependency array
+  }, [orderId, orderStatus]); 
 
   return (
     <>
       <NavBar />
+
+       {/* Title for the order status page */}
       <Typography
         variant="h4"
         style={{
@@ -67,8 +76,11 @@ const OrderStatus = () => {
       >
         Track Order Status
       </Typography>
+
+      {/* Box containing the Stepper component for order status */}
       <Box textAlign="center" sx={{ marginLeft: isNonMobileScreens ? '5rem' : '1rem' }}>
         <Stepper activeStep={icons.indexOf(orderStatus)} orientation="vertical">
+          {/* Map through each step and display the corresponding icon, label, and time */}
           {steps.map((label, index) => (
             <Step key={index}>
               <div
@@ -83,6 +95,7 @@ const OrderStatus = () => {
                     marginRight: '1rem',
                   }}
                 >
+                  {/* Display FontAwesomeIcon with dynamic color based on the order status */}
                   <FontAwesomeIcon
                     icon={icons[index]}
                     style={{
@@ -97,6 +110,7 @@ const OrderStatus = () => {
                   />
                 </div>
                 <div>
+                  {/* Display order status label with dynamic color */}
                   <Typography
                     variant="body1"
                     style={{
@@ -112,7 +126,7 @@ const OrderStatus = () => {
                     {label}
                   </Typography>
                 </div>
-                {/* Displaying the time */}
+                {/* Displaying the time for the current step */}
                 {index === steps.indexOf(orderStatus) && (
                   <div
                     style={{
@@ -125,6 +139,7 @@ const OrderStatus = () => {
                       <FontAwesomeIcon icon={faClock} style={{ fontSize: isNonMobileScreens ? '1.3rem' : "1rem", color: 'grey' }} />
                     </div>
                     <div>
+                      {/* Display formatted time for the current step */}
                       <Typography variant="body1" style={{ fontSize: isNonMobileScreens ? '1.3rem': "1rem", color: 'grey' }}>
                         {new Date(orderTime).toLocaleString(undefined, {
                           hour: '2-digit',

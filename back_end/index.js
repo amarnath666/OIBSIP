@@ -1,11 +1,7 @@
 import express from "express";
-import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import session from "express-session";
-import LocalStrategy from "passport-local";
-import bcrypt from "bcrypt";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -13,7 +9,6 @@ import authRoutes from "./routes/auth.js";
 import pizzaVarieties from "./init/data.js";
 import { baseOptions, sauceOptions, cheeseOptions, veggieOptions, meatOptions} from "./init/customPizza.js";
 import paymentRoutes from "./routes/payment.js";
-import requireAuth from "./middleware/middleware.js";
 import User from "./models/User.js";
 import orderRoutes from "./routes/order.js";
 import Base from "./models/Base.js";
@@ -45,10 +40,12 @@ app.use("/payment", paymentRoutes);
 app.use("/order", orderRoutes);
 app.use("/stock", stockRoutes);
 
+// Route to get pizza varieties
 app.get("/pizza-varieties", (req, res) => {
   res.json(pizzaVarieties);
 });
 
+// Route to get options for custom pizza
 app.get("/custom-pizza", (req, res) => {
   const customPizza = {
     baseOptions,

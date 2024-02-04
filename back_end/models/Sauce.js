@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Define the Sauce schema
 const sauceSchema = new mongoose.Schema({
   name: { 
     type: String,
@@ -8,7 +9,7 @@ const sauceSchema = new mongoose.Schema({
   quantity: { 
     type: Number, 
     required: true, 
-    default: 30 
+    default: 20 
   },
   img: {
     type: String,  
@@ -17,6 +18,7 @@ const sauceSchema = new mongoose.Schema({
   { timestamps: true}
   );
 
+// Create the Sauce model using the schema
 const Sauce = mongoose.model('Sauce', sauceSchema);
 
 export default Sauce;

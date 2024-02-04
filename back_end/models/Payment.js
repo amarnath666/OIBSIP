@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Define the Payment schema
 const paymentSchema = new mongoose.Schema({
   razorpay_order_id: {
     type: String,
@@ -15,6 +16,7 @@ const paymentSchema = new mongoose.Schema({
   }
 });
 
+// Create the Payment model using the schema
 const Payment = mongoose.model("Payment", paymentSchema);
 
 export default Payment;

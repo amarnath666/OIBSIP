@@ -6,10 +6,11 @@ const InventoryPage = () => {
         <>
             <NavBar />
             <div style={{ textAlign: "center"}}>
-            <h1>Mini Inventory</h1>
+            <h1  style={{ color: "blue"}}>Mini Inventory</h1>
             </div>
             <hr />
 
+            {/* Render Inventory component for each ingredient */}
             <Inventory ingredient="base" />
             <Inventory ingredient="sauce" />
             <Inventory ingredient="cheese" />

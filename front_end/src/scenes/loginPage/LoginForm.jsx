@@ -19,23 +19,29 @@ const LoginForm = () => {
     password: '',
   });
 
+  // Function to handle changes in form fields
   const handleChange = (e) => {
+    console.log('Value changed:', e.target.value);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
+  
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      // Make a request to the server to authenticate the user
       const response = await axios.post('http://localhost:3001/auth/login', formData);
 
       if (response.status === 200) {
         const { token, userId } = response.data;
 
+        // Dispatch actions to update the Redux store with authentication information
         dispatch(login());
         dispatch(setToken(token));
         dispatch(setUserId(userId));
 
+        // Navigate to the home page after successful login
         navigate("/home");
       }
     } catch (error) {
@@ -53,6 +59,8 @@ if (error.response && error.response.status === 401) {
 return (
   <Grid >
      <NavBar />
+
+      {/* Main content of the login form */}
      <Grid container justifyContent="center" alignItems="center" style={{ height: '80vh' }}>
         <Grid item xs={10} sm={8} md={6} lg={4}>
           <Paper elevation={0} style={{ padding: '20px' }}>
@@ -66,6 +74,8 @@ return (
                 </Typography>
               </Grid>
             </Grid>
+
+          {/* Form for user login */}
           <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
@@ -87,11 +97,14 @@ return (
               margin="normal"
               required
             />
+            {/* Button for triggering login */}
             <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: '1rem' }}>
               Login
             </Button>
           </form>
           {loginError && <Typography color="error" style={{ marginTop: '10px' }}>{loginError}</Typography>}
+
+           {/* Links for forgot password and sign up */}
           <Grid container justifyContent="space-between" marginTop="1rem">
             <Typography variant="body2">
               <Link to="/forgot-password">Forgot Password?</Link>
