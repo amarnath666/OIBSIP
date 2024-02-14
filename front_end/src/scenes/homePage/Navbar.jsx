@@ -54,7 +54,7 @@ const NavBar = () => {
     return (
         <AppBar position="sticky">
             <Toolbar>
-            <Typography variant="h5" component={Link} to="/home" sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}>
+            <Typography variant="h5" component={Link} to="/" sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}>
                 Pizzify
             </Typography>
 
@@ -85,7 +85,7 @@ const NavBar = () => {
                         <ListItem Button component={Link} to="/register" onClick={handleDrawerToggle}>
                             <ListItemText primary="Register" />
                         </ListItem>
-                        <ListItem Button component={Link} to="/" onClick={handleDrawerToggle}>
+                        <ListItem Button component={Link} to="/login" onClick={handleDrawerToggle}>
                             <ListItemText primary="User login" />
                         </ListItem>
                         <ListItem Button component={Link} to="/admin-login" onClick={handleDrawerToggle}>
@@ -129,7 +129,7 @@ const NavBar = () => {
                             <Button color="inherit" component={Link} to="/register">
                                     Register
                                 </Button>
-                                <Button color="inherit" component={Link} to="/">
+                                <Button color="inherit" component={Link} to="/login">
                                     User login
                                 </Button>
                                 <Button color="inherit" component={Link} to="/admin-login">

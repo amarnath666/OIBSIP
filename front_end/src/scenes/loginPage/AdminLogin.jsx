@@ -37,7 +37,6 @@ const AdminLogin = () => {
                 // If login is successful, dispatch the setAdmin action and navigate to the admin page
                 dispatch(setAdmin());
                 navigate("/admin");
-                console.log('Admin login successful');
             }
         } catch (error) {
             console.error('Admin login error:', error);

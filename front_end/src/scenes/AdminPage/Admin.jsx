@@ -12,7 +12,7 @@ import {
   Paper,
   InputLabel,
 } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateOrderStatus } from 'scenes/state/authSlice';
 
 // Custom styles for the component
@@ -56,6 +56,7 @@ function useInterval(callback, delay) {
 
 const Admin = () => {
   const [orders, setOrders] = useState([]);
+  const isAdmin = useSelector((state) => state.auth.is)
   const [orderStatus, setOrderStatus] = useState({});
   const dispatch = useDispatch();
 
@@ -96,7 +97,6 @@ const Admin = () => {
       // Dispatch the update to the server
       const actionResult = await dispatch(updateOrderStatus({ orderId, newOrderStatus: newStatus }));
       const updatedOrderStatus = actionResult.payload;
-      console.log('Updated Order Status:', updatedOrderStatus);
     } catch (error) {
       console.error('Error updating order status:', error);
     }
@@ -110,7 +110,7 @@ const Admin = () => {
   // Polling every 5 seconds (5000 milliseconds)
   useInterval(() => {
     pollForLatestOrderInfo();
-  }, 1000);
+  }, 5000);
 
   // Filter orders to exclude those with status "Delivered" from Admin Dashboard
   const filteredOrders = orders.filter(order => order.status !== "Delivered");

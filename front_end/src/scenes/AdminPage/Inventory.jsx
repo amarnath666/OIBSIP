@@ -24,7 +24,7 @@ const Inventory = ({ ingredient }) => {
     // Poll for inventory updates every 5 seconds 
     const interval = setInterval(() => {
       fetchInventory();
-    }, 1000);
+    }, 5000);
 
     // Cleanup interval on component unmount
     return () => clearInterval(interval);
@@ -32,7 +32,7 @@ const Inventory = ({ ingredient }) => {
 
   return (
     <div style={{ textAlign: "center"}}>
-      <h3 style={{ color: "#42a5f5"}}>{`${ingredient.toUpperCase()} STOCK`}</h3>
+      <h3>{`${ingredient.toUpperCase()} STOCK`}</h3>
       <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', margin: "auto"  }}>
         <thead style={{ backgroundColor: '#f2f2f2'}}>
           <tr>

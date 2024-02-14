@@ -31,7 +31,7 @@ const OTPVerification = () => {
         setVerificationMessage('OTP verified successfully.');
 
         // Redirect to login page after successful OTP verification
-        navigate('/');
+        navigate('/login');
       }
     } catch (error) {
       console.error('OTP verification error:', error);

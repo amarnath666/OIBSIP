@@ -31,10 +31,6 @@ const PizzaList = () => {
 
     fetchData();
   }, [dispatch, isAuthenticated]);
-  
-  if(!isAuthenticated) {
-    return null;
-  }
 
   // User is logged in, render the pizza list
   return (

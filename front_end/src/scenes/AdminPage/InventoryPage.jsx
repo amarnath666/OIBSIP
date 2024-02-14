@@ -15,7 +15,6 @@ const InventoryPage = () => {
             <Inventory ingredient="sauce" />
             <Inventory ingredient="cheese" />
             <Inventory ingredient="veggie" />
-            <Inventory ingredient="meat" />
         </>
       
     )

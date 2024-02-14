@@ -6,6 +6,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { fetchLatestOrderInfo } from 'scenes/state/authSlice';
 import NavBar from 'scenes/homePage/Navbar';
 
+
 const PaymentSuccess = () => {
   // Extracting 'reference' from URL parameters
   const searchParams = new URLSearchParams(window.location.search);

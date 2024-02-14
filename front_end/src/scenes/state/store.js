@@ -1,8 +1,5 @@
-// scenes/state/store.js
-
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import authSlice, { fetchPizzaOptions } from './authSlice';
-import logger from 'redux-logger';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for the web
 
@@ -19,7 +16,7 @@ const store = configureStore({
   reducer: {
     auth: persistedReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
 
 const persistor = persistStore(store);

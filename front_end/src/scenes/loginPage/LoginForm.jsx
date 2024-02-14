@@ -21,7 +21,6 @@ const LoginForm = () => {
 
   // Function to handle changes in form fields
   const handleChange = (e) => {
-    console.log('Value changed:', e.target.value);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   
@@ -42,7 +41,7 @@ const LoginForm = () => {
         dispatch(setUserId(userId));
 
         // Navigate to the home page after successful login
-        navigate("/home");
+        navigate("/");
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -97,6 +96,7 @@ return (
               margin="normal"
               required
             />
+            
             {/* Button for triggering login */}
             <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: '1rem' }}>
               Login

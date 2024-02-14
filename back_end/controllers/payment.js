@@ -55,8 +55,6 @@ export const paymentVerification = async (req, res) => {
 
     // Verify and decode the token
     const decodedToken = verifyAndDecodeToken(token);
-
-    // Assuming decodedToken includes user information like userId
     const userId = decodedToken.userId;
 
     // Create a new order
@@ -68,7 +66,6 @@ export const paymentVerification = async (req, res) => {
     // Save the new order
     const savedOrder = await newOrder.save();
 
-  // // Assuming savedOrder has a 'status' field, fetch it
     const orderStatus = savedOrder.status;
 
     // Create a new Admin document for the order

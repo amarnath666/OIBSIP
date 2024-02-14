@@ -14,7 +14,6 @@ const CustomizedPizza = () => {
     // Check if the authToken is available and set isTokenFetched to true accordingly
     if (authToken) {
       setIsTokenFetched(true);
-      console.log('Auth Token Fetched:', authToken);
     }
   }, [authToken, setIsTokenFetched]);
 
@@ -89,16 +88,14 @@ const handleBuyNowClickCustomized = async () => {
     });
 
     const order = await response.json();
-    console.log("Razorpay Order Response:", order);
 
     const options = {
-      key: "rzp_test_ciEkAemCSllnO9",
+      key: process.env.REACT_APP_API_KEY,
       currency: "INR",
       name: "Pizzify",
       image: baseImages[base.name],
       order_id: order.order.id,
       handler: async function (response) {
-        console.log(response);
         const { razorpay_payment_id: reference, razorpay_signature } = response;
         window.location.href = `/paymentsuccess?reference=${reference}`;
 
@@ -123,7 +120,6 @@ const handleBuyNowClickCustomized = async () => {
         });
 
         const verificationResult = await verificationResponse.json();
-        console.log("Payment Verification Response:", verificationResult);
       },
     };
 
@@ -187,8 +183,8 @@ const handleBuyNowClickCustomized = async () => {
                 style={{ width: '100%', maxWidth: '45%', fontWeight: "500" }}
                 onClick={handleBuyNowClickCustomized}
                 sx={{
-                  "&:hover": { backgroundColor: "blue" },
-                  "&:active": { boxShadow: "none", backgroundColor: "blue" },
+                  "&:hover": { backgroundColor: "#1976d2" },
+                  "&:active": { boxShadow: "none", backgroundColor: "#1976d2" },
                 }}
               >
                 Buy Now

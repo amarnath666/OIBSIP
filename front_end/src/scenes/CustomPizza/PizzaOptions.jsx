@@ -127,16 +127,12 @@ const PizzaOptions = () => {
     }
   };
 
-  if (!isAuthenticated) {
-    return <h1>Please Login!</h1>;
-  }
-
   return (
     <div style={{ textAlign: 'center' }}>
       <hr style={{ width: '100%', margin: '20px auto' }} />
 
-      <Typography variant="h3" style={{ marginBottom: '1.5rem', fontWeight: '700', color: "blue" }}>
-        Customize Pizza
+      <Typography variant="h3" style={{ marginBottom: '1.5rem', fontWeight: '700'}}>
+        Customizable Pizza
       </Typography>
 
       <hr style={{ width: '100%', margin: '20px auto' }} />

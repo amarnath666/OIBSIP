@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Grid, Paper, Typography, TextField, Button, CircularProgress } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import NavBar from 'scenes/homePage/Navbar';
 import LockIcon from '@mui/icons-material/Lock';
 
 const ForgotPasswordForm = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        email: '',
+        email: '', 
     });
     const [resetPasswordError, setResetPasswordError] = useState('');
     const [resetPasswordSuccess, setResetPasswordSuccess] = useState('');

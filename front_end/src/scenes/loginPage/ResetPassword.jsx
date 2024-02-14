@@ -32,7 +32,7 @@ const ResetPassword = () => {
             const response = await axios.post(`http://localhost:3001/auth/reset-password/${params.email}`, formData);
 
             if (response.status === 200) {
-                navigate("/");
+                navigate("/login");
 
                 console.log('Password reset successfully');
             }

@@ -36,7 +36,6 @@ const OrderStatus = () => {
       }
 
       const { status, updatedAt } = await response.json();
-      console.log('Updated Order:', { status, updatedAt });
 
       if (status !== orderStatus) {
         // Only update the time if the status changes
@@ -53,7 +52,7 @@ const OrderStatus = () => {
     // Set up interval to periodically update order status
     const intervalId = setInterval(() => {
       updateOrderStatus();
-    }, 1000);
+    }, 5000);
 
     return () => clearInterval(intervalId);
   }, [orderId, orderStatus]); 
