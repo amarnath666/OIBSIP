@@ -59,7 +59,7 @@ const Admin = () => {
   const isAdmin = useSelector((state) => state.auth.is)
   const [orderStatus, setOrderStatus] = useState({});
   const dispatch = useDispatch();
-
+  const authToken = useSelector((state) => state.auth.token);
   // Function to fetch all orders from the server
   const fetchAllOrders = async () => {
     try {

@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import Payment from "../models/Payment.js";
 import Razorpay from "razorpay";
 import User from "../models/User.js";
-import verifyAndDecodeToken from "../utils/verifyAndDecodeToken.js";
 import Order from "../models/Order.js";
 import Admin from "../models/Admin.js";
 import { updateStock } from "./order.js";
@@ -45,17 +44,8 @@ export const paymentVerification = async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
-    const authorizationHeader = req.headers.authorization;
-
-    if (!authorizationHeader) {
-      return res.status(401).json({ success: false, error: "Authorization header missing" });
-    }
-
-    const token = authorizationHeader.split(' ')[1];
-
-    // Verify and decode the token
-    const decodedToken = verifyAndDecodeToken(token);
-    const userId = decodedToken.userId;
+    const { userId } = req.user; 
+    console.log(userId)
 
     // Create a new order
     const newOrder = new Order({
@@ -110,6 +100,8 @@ export const paymentVerification = async (req, res) => {
       await updateStock({ base, cheese, sauce, veggie });
     }
 
+    console.log('Payment verification completed.');
+
     res.status(200).json({ success: true, reference: razorpay_payment_id });
   } catch (error) {
     console.error("Error in paymentVerification:", error);
@@ -119,20 +111,6 @@ export const paymentVerification = async (req, res) => {
 
 // Get the latest order information
 export const getLatestOrderInfo = (req, res) => {
-  try {
-    if (latestOrderInfo) {
-      res.status(200).json({ success: true, latestOrderInfo });
-    } else {
-      res.status(404).json({ success: false, error: "No latest order available" });
-    }
-  } catch (error) {
-    console.error("Error while fetching latest order information:", error);
-    res.status(500).json({ success: false, error: "Internal Server Error" });
-  }
-};
-
-// Endpoint for polling by the admin page
-export const pollForLatestOrderInfo = (req, res) => {
   try {
     if (latestOrderInfo) {
       res.status(200).json({ success: true, latestOrderInfo });

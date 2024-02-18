@@ -81,6 +81,7 @@ const handleBuyNowClickCustomized = async () => {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
       },
       body: JSON.stringify({
         amount: customizedPizza.price,          
@@ -90,7 +91,7 @@ const handleBuyNowClickCustomized = async () => {
     const order = await response.json();
 
     const options = {
-      key: process.env.REACT_APP_API_KEY,
+      key:  "rzp_test_ciEkAemCSllnO9",
       currency: "INR",
       name: "Pizzify",
       image: baseImages[base.name],

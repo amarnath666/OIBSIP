@@ -49,7 +49,7 @@ const PizzaCard = ({ pizza }) => {
   
       // Options for the Razorpay payment
       const options = {
-        key: process.env.REACT_APP_API_KEY,
+        key: "rzp_test_ciEkAemCSllnO9",
         currency: "INR",
         name: "Pizzify",
         description: pizza.description,

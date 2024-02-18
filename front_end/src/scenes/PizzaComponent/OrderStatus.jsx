@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faClock, faTruck, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import NavBar from 'scenes/homePage/Navbar';
 import { Stepper, Step, StepLabel, Typography, Box, useMediaQuery } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 // Icons for different order statuses
 const icons = [faClock, faBoxOpen, faTruck, faCheck];
@@ -12,6 +13,7 @@ const icons = [faClock, faBoxOpen, faTruck, faCheck];
 const steps = ['Order Placed', 'Preparation', 'Out for Delivery', 'Delivered'];
 
 const OrderStatus = () => {
+  const authToken = useSelector((state) => state.auth.token);
   // Media queries for responsive design
   const isNonMobileScreens = useMediaQuery("(min-width: 500px)"); 
   const notMobileScreens = useMediaQuery("(min-width:100px )")
@@ -27,6 +29,7 @@ const OrderStatus = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": `Bearer ${authToken}`
         },
       });
 

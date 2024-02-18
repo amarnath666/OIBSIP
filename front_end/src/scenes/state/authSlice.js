@@ -21,10 +21,21 @@ export const fetchPizzaOptions = createAsyncThunk(
 //ADMIN ORDER STATUS
 export const updateOrderStatus = createAsyncThunk(
   'auth/updateOrderStatus',
-  async ({ orderId, newOrderStatus }) => {
+  async ({ orderId, newOrderStatus }, {getState}) => {
     try {
-      const response = await axios.put(`http://localhost:3001/payment/updateOrderStatus/${orderId}`, { newOrderStatus });
-      return response.data.orderStatus; // Assuming the server responds with the updated order status
+      const authToken = getState().auth.token;
+
+      const response = await fetch(`http://localhost:3001/payment/updateOrderStatus/${orderId}`, { 
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`
+        },
+        body: JSON.stringify({ newOrderStatus })
+       });
+
+      return response.data.orderStatus;
+    
     } catch (error) {
       console.error('Error setting order status:', error);
       throw error;
@@ -33,11 +44,18 @@ export const updateOrderStatus = createAsyncThunk(
 );
 
 // FETCH LATEST ORDER ID
-export const fetchLatestOrderInfo = createAsyncThunk('order/fetchLatestOrderInfo', async () => {
+export const fetchLatestOrderInfo = createAsyncThunk('order/fetchLatestOrderInfo', async (_, {getState}) => {
   try {
-    const response = await fetch("http://localhost:3001/payment/latestOrder");
+    const authToken = getState().auth.token;
+    const response = await fetch("http://localhost:3001/payment/latestOrder", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${authToken}`
+      }
+    })
     const data = await response.json();
-    
+
     if (data.success) {
       return data.latestOrderInfo;
     } else {
@@ -120,17 +138,10 @@ const authSlice = createSlice({
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         state.orderStatus = action.payload;
       })
-      .addCase(fetchLatestOrderInfo.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(fetchLatestOrderInfo.fulfilled, (state, action) => {
         state.loading = false;
         state.latestOrderInfo = action.payload;
       })
-      .addCase(fetchLatestOrderInfo.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      });
   },
 });
 

@@ -84,31 +84,29 @@ export const confirmOtp = async (req, res) => {
 };
 
 // User login
-export const login = async (email, password) => {
+export const login = async (req, res) => {
   try {
-    const user = await User.findOne({ email });
+      const { email, password} = req.body;
 
-    if (!user) {
-      return { error: "User not found" };
-    }
+      // Find a user with the provided email in the database
+      const user = await User.findOne({ email: email})
+      if(!user) return res.status(400).json({msg: "User does not exist. "});
 
-    if (!user.verified) {
-      return { error: "Email not verified. Please check your email for verification." };
-    }
+       // Compare the provided password with the hashed password stored in the database
+      const isMatch = await bcrypt.compare(password, user.password);
+      if(!isMatch) return res.status(400).json({msg: "Invalid credentials. "});
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+      // If the email and password are valid, generate a JSON Web Token (JWT)
+      const token = generateToken(user._id, user.role);;
 
-    if (isPasswordValid) {
-      const token = generateToken(user._id, user.role);
-      return { userId: user._id, token, message: "Login successful!" };
-    }
-
-    return { error: "Invalid Password" };
-  } catch (error) {
-    console.error("Login error:", error);
-    return { error: "Internal Server Error" };
+      // Remove the password from the user object before sending it in the response
+      delete user.password;
+      res.status(200).json({ token });
+  } catch (err) {
+      res.status(500).json({ error: err.message });
   }
-};
+}
+
 
 // forgot password
 export const forgotPassword = async (req, res) => {
