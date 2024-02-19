@@ -6,7 +6,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import authRoutes from "./routes/auth.js";
-import pizzaVarieties from "./init/data.js";
 import { baseOptions, sauceOptions, cheeseOptions, veggieOptions, meatOptions} from "./init/customPizza.js";
 import paymentRoutes from "./routes/payment.js";
 import User from "./models/User.js";
@@ -39,23 +38,6 @@ app.use("/auth", authRoutes);
 app.use("/payment", paymentRoutes);
 app.use("/order", orderRoutes);
 app.use("/stock", stockRoutes);
-
-// Route to get pizza varieties
-app.get("/pizza-varieties", (req, res) => {
-  res.json(pizzaVarieties);
-});
-
-// Route to get options for custom pizza
-app.get("/custom-pizza", (req, res) => {
-  const customPizza = {
-    baseOptions,
-    sauceOptions,
-    cheeseOptions,
-    veggieOptions,
-  };
-
-  res.json(customPizza);
-});
 
 /* MONGOOSE SETUP */
 mongoose.connect(process.env.MONGODB_URL);

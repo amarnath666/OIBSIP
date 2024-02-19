@@ -7,6 +7,6 @@ const router = express.Router();
 router.post("/check-out",verifyToken, checkOut);
 router.post("/payment-verification",verifyToken, paymentVerification);
 router.get('/latestOrder',verifyToken, getLatestOrderInfo);
-router.put("/updateOrderStatus/:orderId",verifyToken, updateOrderStatus);
+router.put("/updateOrderStatus/:orderId", updateOrderStatus);
 
 export default router;

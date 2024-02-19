@@ -21,15 +21,12 @@ export const fetchPizzaOptions = createAsyncThunk(
 //ADMIN ORDER STATUS
 export const updateOrderStatus = createAsyncThunk(
   'auth/updateOrderStatus',
-  async ({ orderId, newOrderStatus }, {getState}) => {
+  async ({ orderId, newOrderStatus }) => {   
     try {
-      const authToken = getState().auth.token;
-
       const response = await fetch(`http://localhost:3001/payment/updateOrderStatus/${orderId}`, { 
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${authToken}`
         },
         body: JSON.stringify({ newOrderStatus })
        });

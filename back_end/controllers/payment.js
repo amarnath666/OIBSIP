@@ -45,7 +45,6 @@ export const paymentVerification = async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
     const { userId } = req.user; 
-    console.log(userId)
 
     // Create a new order
     const newOrder = new Order({
@@ -99,8 +98,6 @@ export const paymentVerification = async (req, res) => {
       // Call the function to update stock after successful payment
       await updateStock({ base, cheese, sauce, veggie });
     }
-
-    console.log('Payment verification completed.');
 
     res.status(200).json({ success: true, reference: razorpay_payment_id });
   } catch (error) {
